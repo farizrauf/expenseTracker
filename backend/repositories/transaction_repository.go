@@ -68,3 +68,59 @@ func (r *TransactionRepository) GetSummary(userID uint) (map[string]float64, err
 	}
 	return summary, err
 }
+
+func (r *TransactionRepository) GetTimeSeriesData(userID uint, days int) ([]map[string]interface{}, error) {
+	var results []struct {
+		Date  time.Time
+		Type  string
+		Total float64
+	}
+
+	startDate := time.Now().AddDate(0, 0, -days)
+
+	err := r.db.Model(&models.Transaction{}).
+		Select("DATE(date) as date, type, sum(amount) as total").
+		Where("user_id = ? AND date >= ?", userID, startDate).
+		Group("DATE(date), type").
+		Order("DATE(date) asc").
+		Scan(&results).Error
+
+	if err != nil {
+		return nil, err
+	}
+
+	// Group by date for frontend ease of use
+	timeSeriesMap := make(map[string]map[string]interface{})
+	for _, res := range results {
+		dateStr := res.Date.Format("2006-01-02")
+		if _, ok := timeSeriesMap[dateStr]; !ok {
+			timeSeriesMap[dateStr] = map[string]interface{}{
+				"date":    dateStr,
+				"income":  0.0,
+				"expense": 0.0,
+			}
+		}
+		if res.Type == "income" {
+			timeSeriesMap[dateStr]["income"] = res.Total
+		} else {
+			timeSeriesMap[dateStr]["expense"] = res.Total
+		}
+	}
+
+	// Convert map back to sorted slice
+	var timeSeries []map[string]interface{}
+	for i := days; i >= 0; i-- {
+		d := time.Now().AddDate(0, 0, -i).Format("2006-01-02")
+		if val, ok := timeSeriesMap[d]; ok {
+			timeSeries = append(timeSeries, val)
+		} else {
+			timeSeries = append(timeSeries, map[string]interface{}{
+				"date":    d,
+				"income":  0.0,
+				"expense": 0.0,
+			})
+		}
+	}
+
+	return timeSeries, nil
+}

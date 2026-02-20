@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, ReceiptText, PlusCircle, User, LogOut } from 'lucide-react';
+import { LayoutDashboard, Receipt, PlusCircle, User, LogOut } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 
 const Layout = () => {
@@ -8,7 +8,8 @@ const Layout = () => {
 
   const navItems = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
-    { name: 'Transactions', icon: ReceiptText, path: '/transactions' },
+    { name: 'Transactions', icon: Receipt, path: '/transactions' },
+    { name: 'Categories', icon: PlusCircle, path: '/categories' },
   ];
 
   return (

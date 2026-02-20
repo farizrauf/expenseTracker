@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Transactions from './pages/Transactions';
+import Categories from './pages/Categories';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -26,6 +27,7 @@ function App() {
         }>
           <Route index element={<Dashboard />} />
           <Route path="transactions" element={<Transactions />} />
+          <Route path="categories" element={<Categories />} />
         </Route>
       </Routes>
     </BrowserRouter>

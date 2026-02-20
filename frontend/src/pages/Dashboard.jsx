@@ -39,16 +39,12 @@ const Dashboard = () => {
     currency: 'IDR',
   }).format(val || 0);
 
-  // Mock chart data (since backend doesn't provide time-series yet)
-  const chartData = [
-    { name: 'Mon', income: 4000, expense: 2400 },
-    { name: 'Tue', income: 3000, expense: 1398 },
-    { name: 'Wed', income: 2000, expense: 9800 },
-    { name: 'Thu', income: 2780, expense: 3908 },
-    { name: 'Fri', income: 1890, expense: 4800 },
-    { name: 'Sat', income: 2390, expense: 3800 },
-    { name: 'Sun', income: 3490, expense: 4300 },
-  ];
+  // Use data from backend for the chart
+  const chartData = data?.time_series?.map(item => ({
+    name: new Date(item.date).toLocaleDateString('en-US', { weekday: 'short' }),
+    income: item.income,
+    expense: item.expense
+  })) || [];
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">

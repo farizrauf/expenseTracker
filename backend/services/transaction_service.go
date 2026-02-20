@@ -48,10 +48,17 @@ func (s *TransactionService) GetDashboard(userID uint) (map[string]interface{}, 
 		lastTransactions = lastTransactions[:5]
 	}
 
+	// Get time-series data for the last 7 days
+	timeSeries, err := s.repo.GetTimeSeriesData(userID, 6) // 6 makes it 7 days total including today
+	if err != nil {
+		return nil, err
+	}
+
 	return map[string]interface{}{
 		"total_income":      income,
 		"total_expense":     expense,
 		"current_balance":   balance,
 		"last_transactions": lastTransactions,
+		"time_series":       timeSeries,
 	}, nil
 }
