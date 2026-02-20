@@ -227,27 +227,27 @@ const Dashboard = () => {
         
         <div className="space-y-4">
           {data?.recent_transactions?.length > 0 ? (
-            data.recent_transactions.map((t) => (
-              <div key={t.id} className="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-slate-700/50 rounded-2xl transition-all group">
+            data.recent_transactions.map((transaction) => (
+              <div key={transaction.id} className="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-slate-700/50 rounded-2xl transition-all group">
                 <div className="flex items-center space-x-4">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
-                    t.type === 'income' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
+                    transaction.type === 'income' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
                   }`}>
-                    {t.type === 'income' ? <TrendingUp size={20} /> : <TrendingDown size={20} />}
+                    {transaction.type === 'income' ? <TrendingUp size={20} /> : <TrendingDown size={20} />}
                   </div>
                   <div>
                     <p className="font-bold text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors">
-                      {t.description || t('no_description')}
+                      {transaction.description || t('no_description')}
                     </p>
-                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{t.category_name}</p>
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{transaction.category_name}</p>
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className={`font-black ${t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
-                    {t.type === 'income' ? '+' : '-'}{new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(t.amount)}
+                  <p className={`font-black ${transaction.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                    {transaction.type === 'income' ? '+' : '-'}{new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(transaction.amount)}
                   </p>
                   <p className="text-[10px] text-gray-400 font-medium">
-                    {new Date(t.date).toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', { day: 'numeric', month: 'short' })}
+                    {new Date(transaction.date).toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', { day: 'numeric', month: 'short' })}
                   </p>
                 </div>
               </div>

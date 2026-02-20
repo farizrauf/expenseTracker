@@ -217,7 +217,8 @@ export const LanguageProvider = ({ children }) => {
   };
 
   const t = (key) => {
-    return translations[language][key] || key;
+    const lang = translations[language] || translations['en'] || {};
+    return lang[key] || key;
   };
 
   return (
