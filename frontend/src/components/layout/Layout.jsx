@@ -62,12 +62,24 @@ const Layout = () => {
             <LogOut size={20} />
             <span className="font-medium">Logout</span>
           </button>
+          <div className="mt-4 px-2 pt-4 border-t border-gray-100 dark:border-slate-700">
+            <p className="text-[10px] text-center text-gray-400 dark:text-gray-500 uppercase tracking-widest font-semibold">
+              Developed by Fariz Rauf
+            </p>
+          </div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <main className="p-4 md:p-8 max-w-7xl mx-auto">
-        <Outlet />
+      <main className="p-4 md:p-8 max-w-7xl mx-auto flex flex-col min-h-screen">
+        <div className="flex-1">
+          <Outlet />
+        </div>
+        <footer className="mt-8 pb-8 md:hidden text-center">
+          <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-widest font-semibold">
+            Developed by Fariz Rauf
+          </p>
+        </footer>
       </main>
 
       {/* Bottom Navigation - Mobile */}
