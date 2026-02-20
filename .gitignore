@@ -1,0 +1,25 @@
+# IDEs
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Dependencies
+node_modules/
+vendor/
+
+# Local env
+.env
+backend/.env
+frontend/.env
+
+# Build artifacts
+dist/
+build/
+main
+main.exe
+
+# Docker data
+postgres_data/
