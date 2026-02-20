@@ -112,7 +112,7 @@ func (r *TransactionRepository) GetTimeSeriesData(userID uint, days int) ([]map[
 	// Convert map back to sorted slice
 	var timeSeries []map[string]interface{}
 	for i := days; i >= 0; i-- {
-		d := time.Now().AddDate(0, 0, -i).Format("2006-01-02")
+		d := now.AddDate(0, 0, -i).Format("2006-01-02")
 		if val, ok := timeSeriesMap[d]; ok {
 			timeSeries = append(timeSeries, val)
 		} else {
