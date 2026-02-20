@@ -82,7 +82,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-primary-200 transition-all flex items-center justify-center space-x-2 active:scale-95 disabled:opacity-70"
+              className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-primary-200 dark:shadow-none transition-all flex items-center justify-center space-x-2 active:scale-95 disabled:opacity-70"
             >
               {loading ? <Loader2 className="animate-spin" size={24} /> : (
                 <>

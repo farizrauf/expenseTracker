@@ -86,7 +86,7 @@ const Categories = () => {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3 bg-primary-600 text-white font-bold rounded-2xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-100 flex items-center justify-center gap-2 disabled:opacity-50"
+                className="w-full py-3 bg-primary-600 text-white font-bold rounded-2xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-100 dark:shadow-none flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isSubmitting ? 'Adding...' : 'Add Category'}
               </button>

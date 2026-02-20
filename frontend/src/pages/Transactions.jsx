@@ -121,7 +121,7 @@ const Transactions = () => {
             setEditingId(null);
             setShowModal(true);
           }}
-          className="bg-primary-600 text-white px-5 py-2.5 rounded-2xl flex items-center space-x-2 hover:bg-primary-700 transition-all shadow-lg shadow-primary-100"
+          className="bg-primary-600 text-white px-5 py-2.5 rounded-2xl flex items-center space-x-2 hover:bg-primary-700 transition-all shadow-lg shadow-primary-100 dark:shadow-none"
         >
           <Plus size={20} />
           <span className="font-semibold">Add Record</span>
@@ -315,7 +315,7 @@ const Transactions = () => {
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-3 bg-primary-600 text-white font-bold rounded-2xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-100"
+                  className="flex-1 py-3 bg-primary-600 text-white font-bold rounded-2xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-100 dark:shadow-none"
                 >
                   Save Transaction
                 </button>

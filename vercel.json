@@ -1,13 +1,7 @@
 {
   "version": 2,
   "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "/api/index.go"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/frontend/dist/$1"
-    }
+    { "source": "/api/(.*)", "destination": "/api/index.go" },
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }

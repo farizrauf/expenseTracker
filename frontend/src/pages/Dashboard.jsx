@@ -63,7 +63,7 @@ const Dashboard = () => {
         </div>
         <button 
           onClick={() => navigate('/transactions', { state: { openModal: true } })}
-          className="bg-primary-600 text-white px-4 py-2 rounded-xl flex items-center space-x-2 hover:bg-primary-700 transition-all shadow-lg shadow-primary-200"
+          className="bg-primary-600 text-white px-4 py-2 rounded-xl flex items-center space-x-2 hover:bg-primary-700 transition-all shadow-lg shadow-primary-200 dark:shadow-none"
         >
           <Plus size={20} />
           <span className="hidden md:inline font-medium">New Transaction</span>
