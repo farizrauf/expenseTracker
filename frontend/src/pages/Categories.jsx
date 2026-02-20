@@ -59,26 +59,26 @@ const Categories = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
       <header>
-        <h1 className="text-2xl font-bold text-gray-900">Category Management</h1>
-        <p className="text-gray-500">Organize your transactions with custom categories</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">Category Management</h1>
+        <p className="text-gray-500 dark:text-gray-400">Organize your transactions with custom categories</p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Add Category Form */}
         <div className="md:col-span-1">
-          <div className="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm sticky top-8">
-            <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-              <Plus size={20} className="text-primary-600" />
+          <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm sticky top-8 transition-colors">
+            <h2 className="text-lg font-bold mb-4 flex items-center gap-2 dark:text-white">
+              <Plus size={20} className="text-primary-600 dark:text-primary-400" />
               New Category
             </h2>
             <form onSubmit={handleAddCategory} className="space-y-4">
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-500">Category Name</label>
+                <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category Name</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Subsistence"
-                  className="w-full px-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-slate-700/50 border-none rounded-2xl focus:ring-2 focus:ring-primary-500 dark:text-white outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                 />
@@ -96,26 +96,26 @@ const Categories = () => {
 
         {/* Categories List */}
         <div className="md:col-span-2 space-y-4">
-          <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
-            <div className="p-6 border-b border-gray-50 flex items-center justify-between">
-              <h2 className="text-lg font-bold flex items-center gap-2">
-                <Layers size={20} className="text-primary-600" />
+          <div className="bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden transition-colors">
+            <div className="p-6 border-b border-gray-50 dark:border-slate-700/50 flex items-center justify-between">
+              <h2 className="text-lg font-bold flex items-center gap-2 dark:text-white">
+                <Layers size={20} className="text-primary-600 dark:text-primary-400" />
                 All Categories
               </h2>
-              <span className="bg-primary-50 text-primary-600 px-3 py-1 rounded-full text-xs font-bold">
+              <span className="bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 px-3 py-1 rounded-full text-xs font-bold transition-colors">
                 {categories.length} Total
               </span>
             </div>
-            <div className="divide-y divide-gray-50">
+            <div className="divide-y divide-gray-50 dark:divide-slate-700/50">
               {categories.map((category) => (
-                <div key={category.id} className="p-4 flex items-center justify-between hover:bg-gray-50 transition-colors">
+                <div key={category.id} className="p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
                   <div className="flex items-center gap-4">
-                    <div className="p-3 bg-gray-100 text-gray-500 rounded-xl">
+                    <div className="p-3 bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-400 rounded-xl transition-colors">
                       <Tag size={20} />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900">{category.name}</h3>
-                      <p className="text-xs text-gray-400">Created: {new Date(category.created_at).toLocaleDateString()}</p>
+                      <h3 className="font-semibold text-gray-900 dark:text-white transition-colors">{category.name}</h3>
+                      <p className="text-xs text-gray-400 dark:text-gray-500">Created: {new Date(category.created_at).toLocaleDateString()}</p>
                     </div>
                   </div>
                   {/* Prevent deleting if it's a default system category if we have that logic, but here categories are user-linked or global */}
