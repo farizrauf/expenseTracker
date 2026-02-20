@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import { Mail, Lock, User, Loader2, ArrowRight } from 'lucide-react';
+import { Mail, Lock, User, Loader2, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 const Register = () => {
   const [formData, setFormData] = useState({ name: '', email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const { register } = useAuth();
   const navigate = useNavigate();
@@ -25,29 +26,29 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900 transition-colors duration-300 p-4">
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-3xl shadow-xl p-8 space-y-8 glass-morphism border border-white">
+        <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-xl p-8 space-y-8 border border-white dark:border-slate-700 transition-colors">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900">Create Account</h1>
-            <p className="text-gray-500 mt-2">Start your journey to financial freedom</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white transition-colors">Create Account</h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-2">Start your journey to financial freedom</p>
           </div>
 
           {error && (
-            <div className="bg-red-50 text-red-600 p-4 rounded-xl text-sm border border-red-100">
+            <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-xl text-sm border border-red-100 dark:border-red-900/30">
               {error}
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 ml-1">Full Name</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 ml-1">Full Name</label>
               <div className="relative">
-                <User className="absolute left-4 top-3.5 text-gray-400" size={20} />
+                <User className="absolute left-4 top-3.5 text-gray-400 dark:text-gray-500" size={20} />
                 <input
                   type="text"
                   required
-                  className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-primary-500 focus:bg-white outline-none transition-all"
+                  className="w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-slate-700/50 border border-gray-100 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-primary-500 focus:bg-white dark:focus:bg-slate-700 outline-none dark:text-white transition-all"
                   placeholder="John Doe"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -56,13 +57,13 @@ const Register = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 ml-1">Email Address</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 ml-1">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-4 top-3.5 text-gray-400" size={20} />
+                <Mail className="absolute left-4 top-3.5 text-gray-400 dark:text-gray-500" size={20} />
                 <input
                   type="email"
                   required
-                  className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-primary-500 focus:bg-white outline-none transition-all"
+                  className="w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-slate-700/50 border border-gray-100 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-primary-500 focus:bg-white dark:focus:bg-slate-700 outline-none dark:text-white transition-all"
                   placeholder="name@example.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
@@ -71,17 +72,24 @@ const Register = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 ml-1">Password</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 ml-1">Password</label>
               <div className="relative">
-                <Lock className="absolute left-4 top-3.5 text-gray-400" size={20} />
+                <Lock className="absolute left-4 top-3.5 text-gray-400 dark:text-gray-500" size={20} />
                 <input
-                  type="password"
+                  type={showPassword ? 'text' : 'password'}
                   required
-                  className="w-full pl-12 pr-4 py-3.5 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-primary-500 focus:bg-white outline-none transition-all"
+                  className="w-full pl-12 pr-12 py-3.5 bg-gray-50 dark:bg-slate-700/50 border border-gray-100 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-primary-500 focus:bg-white dark:focus:bg-slate-700 outline-none dark:text-white transition-all"
                   placeholder="Min. 6 characters"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-3.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors"
+                >
+                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                </button>
               </div>
             </div>
 
@@ -100,9 +108,9 @@ const Register = () => {
           </form>
 
           <div className="text-center">
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
               Already have an account?{' '}
-              <Link to="/login" className="text-primary-600 font-bold hover:underline">
+              <Link to="/login" className="text-primary-600 dark:text-primary-400 font-bold hover:underline transition-colors">
                 Sign In
               </Link>
             </p>
