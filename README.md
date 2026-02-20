@@ -83,3 +83,25 @@ sudo certbot --nginx -d yourdomain.com
 - **Users**: Authentication and profile data.
 - **Categories**: Income/Expense types (Support custom user categories).
 - **Transactions**: Financial records linked to users and categories.
+
+---
+
+## 💡 Panduan Penggunaan
+
+### 1. Pencatatan Transaksi (Modal Cepat)
+
+- Klik tombol **"Add Record"** di Dashboard atau halaman Transactions.
+- Pilih tipe (**Pemasukan** atau **Pengeluaran**).
+- **Fitur Spesial (Inline Category)**: Jika kategori yang Anda inginkan belum ada, pilih **"+ Create New..."** di dropdown kategori. Anda bisa langsung mengetik nama kategori baru tanpa harus pindah halaman. Kategori ini akan otomatis tersimpan untuk penggunaan berikutnya.
+
+### 2. Monitoring & Visualisasi
+
+- Gunakan **Dashboard** untuk melihat saldo terkini dan riwayat transaksi terakhir.
+- Lihat grafik tren pengeluaran dalam 7 hari terakhir untuk mengontrol budget Anda.
+
+### 3. Manajemen Kategori
+
+- Kelola kategori yang sudah ada di halaman **Categories**.
+- Anda bisa menghapus kategori yang tidak lagi digunakan.
+
+---
