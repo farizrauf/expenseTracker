@@ -46,5 +46,28 @@ func InitDB() {
 	}
 
 	DB = db
-	log.Println("Database connected and migrated successfully")
+	seedCategories(db)
+	log.Println("Database connected, migrated, and seeded successfully")
+}
+
+func seedCategories(db *gorm.DB) {
+	defaultCategories := []string{
+		"Salary", "Freelance", "Investment", "Gift", "Bonus", // Income-friendly
+		"Food & Beverage", "Transportation", "Shopping", "Rent", // Expense-friendly
+		"Utilities", "Entertainment", "Health", "Education",
+	}
+
+	for _, name := range defaultCategories {
+		var count int64
+		db.Model(&models.Category{}).Where("name = ? AND user_id IS NULL", name).Count(&count)
+		if count == 0 {
+			cat := models.Category{
+				Name:   name,
+				UserID: nil,
+			}
+			if err := db.Create(&cat).Error; err != nil {
+				log.Printf("Warning: Failed to seed category %s: %v", name, err)
+			}
+		}
+	}
 }
