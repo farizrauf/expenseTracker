@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './hooks/useAuth';
 import Layout from './components/layout/Layout';
@@ -15,6 +16,10 @@ const ProtectedRoute = ({ children }) => {
 };
 
 function App() {
+  useEffect(() => {
+    console.log("Finance Tracker App v1.0.1 - UI Fixes & Edit Feature Active");
+  }, []);
+
   return (
     <BrowserRouter>
       <Routes>
