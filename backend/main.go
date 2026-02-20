@@ -37,8 +37,14 @@ func main() {
 	r := gin.Default()
 
 	// Middleware
+	frontendURL := os.Getenv("FRONTEND_URL")
+	allowedOrigins := []string{"http://localhost:5173", "http://localhost:3000"}
+	if frontendURL != "" {
+		allowedOrigins = append(allowedOrigins, frontendURL)
+	}
+
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173", "http://localhost:3000"}, // Vite defaults
+		AllowOrigins:     allowedOrigins,
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		ExposeHeaders:    []string{"Content-Length"},
