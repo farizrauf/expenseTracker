@@ -13,6 +13,7 @@ const Transactions = () => {
     description: '',
     date: new Date().toISOString().split('T')[0]
   });
+  const [editingId, setEditingId] = useState(null);
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -37,17 +38,48 @@ const Transactions = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.post('/transactions', {
+      const payload = {
         ...formData,
         amount: parseFloat(formData.amount),
         category_id: parseInt(formData.category_id),
         date: new Date(formData.date).toISOString()
-      });
-      setShowModal(false);
+      };
+
+      if (editingId) {
+        await api.put(`/transactions/${editingId}`, payload);
+      } else {
+        await api.post('/transactions', payload);
+      }
+
+      handleCloseModal();
       fetchData();
     } catch (err) {
       alert('Failed to save transaction');
     }
+  };
+
+  const handleEdit = (t) => {
+    setEditingId(t.id);
+    setFormData({
+      type: t.type,
+      amount: t.amount,
+      category_id: t.category_id,
+      description: t.description || '',
+      date: new Date(t.date).toISOString().split('T')[0]
+    });
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setEditingId(null);
+    setFormData({
+      type: 'expense',
+      amount: '',
+      category_id: '',
+      description: '',
+      date: new Date().toISOString().split('T')[0]
+    });
   };
 
   const handleDelete = async (id) => {
@@ -74,7 +106,10 @@ const Transactions = () => {
           <p className="text-gray-500">View and manage all your records</p>
         </div>
         <button 
-          onClick={() => setShowModal(true)}
+          onClick={() => {
+            setEditingId(null);
+            setShowModal(true);
+          }}
           className="bg-primary-600 text-white px-5 py-2.5 rounded-2xl flex items-center space-x-2 hover:bg-primary-700 transition-all shadow-lg shadow-primary-100"
         >
           <Plus size={20} />
@@ -140,7 +175,10 @@ const Transactions = () => {
                   </td>
                   <td className="px-6 py-4 text-right">
                     <div className="flex justify-end space-x-2">
-                      <button className="p-2 text-gray-400 hover:text-blue-600 transition-colors">
+                      <button 
+                        onClick={() => handleEdit(t)}
+                        className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                      >
                         <Edit2 size={18} />
                       </button>
                       <button 
@@ -167,7 +205,7 @@ const Transactions = () => {
       {showModal && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white w-full max-w-lg rounded-3xl p-8 shadow-2xl animate-in zoom-in duration-300">
-            <h2 className="text-xl font-bold mb-6">New Transaction</h2>
+            <h2 className="text-xl font-bold mb-6">{editingId ? 'Edit Transaction' : 'New Transaction'}</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="flex bg-gray-100 p-1 rounded-2xl">
                 <button
@@ -237,7 +275,7 @@ const Transactions = () => {
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"
-                  onClick={() => setShowModal(false)}
+                  onClick={handleCloseModal}
                   className="flex-1 py-3 bg-gray-100 text-gray-600 font-bold rounded-2xl hover:bg-gray-200 transition-all"
                 >
                   Cancel

@@ -38,6 +38,7 @@ func SetupRoutes(
 			{
 				transactions.GET("", transCtrl.GetAll)
 				transactions.POST("", transCtrl.Create)
+				transactions.PUT("/:id", transCtrl.Update)
 				transactions.DELETE("/:id", transCtrl.Delete)
 				transactions.GET("/dashboard", transCtrl.GetDashboard)
 			}

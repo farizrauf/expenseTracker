@@ -91,3 +91,38 @@ func (ctrl *TransactionController) Delete(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Transaction deleted"})
 }
+
+func (ctrl *TransactionController) Update(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Param("id"))
+	userID := c.MustGet("user_id").(uint)
+
+	var input struct {
+		Type        string    `json:"type" binding:"required"`
+		Amount      float64   `json:"amount" binding:"required"`
+		CategoryID  uint      `json:"category_id" binding:"required"`
+		Description string    `json:"description"`
+		Date        time.Time `json:"date" binding:"required"`
+	}
+
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	transaction := &models.Transaction{
+		ID:          uint(id),
+		UserID:      userID,
+		Type:        input.Type,
+		Amount:      input.Amount,
+		CategoryID:  input.CategoryID,
+		Description: input.Description,
+		Date:        input.Date,
+	}
+
+	if err := ctrl.service.Update(transaction); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update transaction"})
+		return
+	}
+
+	c.JSON(http.StatusOK, transaction)
+}
