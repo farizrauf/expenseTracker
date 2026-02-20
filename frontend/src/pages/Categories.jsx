@@ -1,11 +1,15 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
-import { Plus, Trash2, Tag, Layers } from 'lucide-react';
+import { useAuth } from '../hooks/useAuth';
+import { useLanguage } from '../hooks/useLanguage';
+import { PlusCircle, Trash2, Tag, Loader2 } from 'lucide-react';
 
 const Categories = () => {
+  const { user } = useAuth();
+  const { t, language } = useLanguage();
   const [categories, setCategories] = useState([]);
+  const [newCategory, setNewCategory] = useState('');
   const [loading, setLoading] = useState(true);
-  const [newName, setNewName] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -14,10 +18,11 @@ const Categories = () => {
 
   const fetchCategories = async () => {
     try {
-      const { data } = await api.get('/categories');
-      setCategories(data);
+      setLoading(true);
+      const res = await api.get('/categories');
+      setCategories(res.data);
     } catch (err) {
-      console.error('Failed to fetch categories', err);
+      console.error('Failed to fetch categories');
     } finally {
       setLoading(false);
     }
@@ -25,115 +30,117 @@ const Categories = () => {
 
   const handleAddCategory = async (e) => {
     e.preventDefault();
-    if (!newName.trim()) return;
+    if (!newCategory.trim()) return;
 
     setIsSubmitting(true);
     try {
-      await api.post('/categories', { name: newName });
-      setNewName('');
-      fetchCategories();
+      const res = await api.post('/categories', { name: newCategory });
+      setCategories([...categories, res.data]);
+      setNewCategory('');
     } catch (err) {
-      alert('Gagal menambahkan kategori');
+      alert(t('fail_add_cat'));
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Apakah Anda yakin ingin menghapus kategori ini? Transaksi yang menggunakan kategori ini tidak akan terhapus, namun referensi kategorinya mungkin akan hilang.')) {
-      try {
-        await api.delete(`/categories/${id}`);
-        fetchCategories();
-      } catch (err) {
-        alert('Gagal menghapus kategori');
-      }
+    if (!window.confirm(t('confirm_delete_category'))) return;
+
+    try {
+      await api.delete(`/categories/${id}`);
+      setCategories(categories.filter(c => c.id !== id));
+    } catch (err) {
+      alert(t('fail_delete_cat'));
     }
   };
 
-  if (loading) return (
-    <div className="flex items-center justify-center h-96">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-    </div>
-  );
-
   return (
-    <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <header>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">Manajemen Kategori</h1>
-        <p className="text-gray-500 dark:text-gray-400">Atur transaksi Anda dengan kategori kustom</p>
+        <h1 className="text-4xl font-black text-gray-900 dark:text-white transition-colors tracking-tight">
+          {t('category_management')}
+        </h1>
+        <p className="text-gray-500 dark:text-gray-400 mt-1 font-medium italic">
+          {t('organize_categories')}
+        </p>
       </header>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         {/* Add Category Form */}
-        <div className="md:col-span-1">
-          <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm sticky top-8 transition-colors">
-            <h2 className="text-lg font-bold mb-4 flex items-center gap-2 dark:text-white">
-              <Plus size={20} className="text-primary-600 dark:text-primary-400" />
-              Kategori Baru
-            </h2>
-            <form onSubmit={handleAddCategory} className="space-y-4">
-              <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Nama Kategori</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="misal: Kebutuhan Pokok"
-                  className="w-full px-4 py-3 bg-gray-50 dark:bg-slate-700/50 border-none rounded-2xl focus:ring-2 focus:ring-primary-500 dark:text-white outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                />
-              </div>
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full py-3 bg-primary-600 text-white font-bold rounded-2xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-100 dark:shadow-none flex items-center justify-center gap-2 disabled:opacity-50"
-              >
-                {isSubmitting ? 'Menambahkan...' : 'Tambah Kategori'}
-              </button>
-            </form>
-          </div>
+        <div className="bg-white dark:bg-slate-800 p-8 rounded-[2.5rem] border border-white dark:border-slate-700 shadow-xl shadow-gray-100 dark:shadow-none transition-colors">
+          <h2 className="text-lg font-black mb-6 text-gray-900 dark:text-white uppercase tracking-wider flex items-center gap-2">
+            <PlusCircle className="text-primary-600" size={20} />
+            {t('new_category_box')}
+          </h2>
+          <form onSubmit={handleAddCategory} className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-[10px] font-black text-gray-400 dark:text-gray-500 uppercase tracking-widest ml-1">{t('category_name_label')}</label>
+              <input
+                type="text"
+                placeholder={t('category_name_placeholder')}
+                className="w-full px-5 py-4 bg-gray-50 dark:bg-slate-700/50 border border-gray-100 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-primary-500 outline-none dark:text-white font-bold transition-all"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={isSubmitting || !newCategory.trim()}
+              className="w-full bg-primary-600 hover:bg-primary-700 text-white font-bold py-4 rounded-2xl shadow-lg shadow-primary-200 dark:shadow-none transition-all flex items-center justify-center space-x-2 active:scale-95 disabled:opacity-50"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="animate-spin" size={20} />
+                  <span className="text-xs uppercase tracking-[0.2em]">{t('adding_btn')}</span>
+                </>
+              ) : (
+                <span className="text-xs uppercase tracking-[0.2em]">{t('add_category_btn')}</span>
+              )}
+            </button>
+          </form>
         </div>
 
         {/* Categories List */}
-        <div className="md:col-span-2 space-y-4">
-          <div className="bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden transition-colors">
-            <div className="p-6 border-b border-gray-50 dark:border-slate-700/50 flex items-center justify-between">
-              <h2 className="text-lg font-bold flex items-center gap-2 dark:text-white">
-                <Layers size={20} className="text-primary-600 dark:text-primary-400" />
-                Semua Kategori
-              </h2>
-              <span className="bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 px-3 py-1 rounded-full text-xs font-bold transition-colors">
-                Total: {categories.length}
-              </span>
-            </div>
-            <div className="divide-y divide-gray-50 dark:divide-slate-700/50">
-              {categories.map((category) => (
-                <div key={category.id} className="p-4 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors">
-                  <div className="flex items-center gap-4">
-                    <div className="p-3 bg-gray-100 dark:bg-slate-700 text-gray-500 dark:text-gray-400 rounded-xl transition-colors">
+        <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-[2.5rem] border border-white dark:border-slate-700 shadow-xl shadow-gray-100 dark:shadow-none overflow-hidden transition-colors">
+          <div className="p-8 border-b border-gray-50 dark:border-slate-700 flex items-center justify-between">
+            <h2 className="text-lg font-black text-gray-900 dark:text-white uppercase tracking-wider">{t('all_categories_box')}</h2>
+            <span className="px-4 py-1.5 bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 rounded-full text-[10px] font-black uppercase tracking-widest">
+              {categories.length} {t('total')}
+            </span>
+          </div>
+          
+          <div className="divide-y divide-gray-50 dark:divide-slate-700">
+            {loading ? (
+              <div className="p-20 flex justify-center"><Loader2 className="animate-spin text-primary-200" size={40} /></div>
+            ) : categories.length > 0 ? (
+              categories.map((c) => (
+                <div key={c.id} className="flex items-center justify-between p-6 hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors group">
+                  <div className="flex items-center space-x-4">
+                    <div className="w-12 h-12 rounded-2xl bg-gray-50 dark:bg-slate-700 flex items-center justify-center text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-all duration-300">
                       <Tag size={20} />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-gray-900 dark:text-white transition-colors">{category.name}</h3>
-                      <p className="text-xs text-gray-400 dark:text-gray-500">Dibuat: {new Date(category.created_at).toLocaleDateString('id-ID')}</p>
+                      <p className="font-bold text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors uppercase tracking-wide">{c.name}</p>
+                      <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                        {t('created_at')} • {new Date(c.CreatedAt).toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+                      </p>
                     </div>
                   </div>
-                  {/* Prevent deleting if it's a default system category if we have that logic, but here categories are user-linked or global */}
                   <button
-                    onClick={() => handleDelete(category.id)}
-                    className="p-2 text-gray-400 hover:text-rose-600 transition-colors"
+                    onClick={() => handleDelete(c.id)}
+                    className="p-3 text-gray-300 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-xl transition-all"
                   >
                     <Trash2 size={20} />
                   </button>
                 </div>
-              ))}
-              {categories.length === 0 && (
-                <div className="py-20 text-center text-gray-400">
-                  <Tag size={48} className="mx-auto mb-4 opacity-20" />
-                  <p>Belum ada kategori. Buat satu untuk memulai.</p>
-                </div>
-              )}
-            </div>
+              ))
+            ) : (
+              <div className="p-20 text-center">
+                <Tag className="mx-auto text-gray-200 dark:text-slate-700 mb-4 opacity-20" size={48} />
+                <p className="text-gray-400 font-medium italic">{t('no_categories_start')}</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

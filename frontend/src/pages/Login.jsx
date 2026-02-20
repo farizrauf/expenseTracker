@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { useLanguage } from '../hooks/useLanguage';
 import { Mail, Lock, Loader2, ArrowRight, Eye, EyeOff } from 'lucide-react';
 
 const Login = () => {
@@ -10,6 +9,7 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const { login } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -20,7 +20,7 @@ const Login = () => {
       await login(email, password);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.error || 'Login gagal. Silakan periksa kredensial Anda.');
+      setError(err.response?.data?.error || t('login_fail'));
     } finally {
       setLoading(false);
     }
@@ -31,8 +31,8 @@ const Login = () => {
       <div className="w-full max-w-md">
         <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-xl p-8 space-y-8 border border-white dark:border-slate-700 transition-colors">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white transition-colors">Selamat Datang</h1>
-            <p className="text-gray-500 dark:text-gray-400 mt-2">Kelola keuangan Anda dengan mudah</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white transition-colors">{t('welcome_back')}</h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-2">{t('manage_finance_ease')}</p>
           </div>
 
           {error && (
@@ -43,7 +43,7 @@ const Login = () => {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 ml-1">Alamat Email</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 ml-1">{t('email_label')}</label>
               <div className="relative">
                 <Mail className="absolute left-4 top-3.5 text-gray-400 dark:text-gray-500" size={20} />
                 <input
@@ -58,7 +58,7 @@ const Login = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 ml-1">Kata Sandi</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 ml-1">{t('password_label')}</label>
               <div className="relative">
                 <Lock className="absolute left-4 top-3.5 text-gray-400 dark:text-gray-500" size={20} />
                 <input
@@ -86,7 +86,7 @@ const Login = () => {
             >
               {loading ? <Loader2 className="animate-spin" size={24} /> : (
                 <>
-                  <span>Masuk</span>
+                  <span>{t('sign_in_btn')}</span>
                   <ArrowRight size={20} />
                 </>
               )}
@@ -95,9 +95,9 @@ const Login = () => {
 
           <div className="text-center">
             <p className="text-gray-500 dark:text-gray-400 text-sm">
-              Belum punya akun?{' '}
+              {t('no_account')}{' '}
               <Link to="/register" className="text-primary-600 dark:text-primary-400 font-bold hover:underline transition-colors">
-                Daftar gratis
+                {t('register_free')}
               </Link>
             </p>
           </div>
