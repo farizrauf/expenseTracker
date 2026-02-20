@@ -4,7 +4,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
 import { useLanguage } from '../../hooks/useLanguage';
 
-const Layout = ({ children }) => {
+const Layout = () => {
   const { logout, user } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { toggleLanguage, t, language } = useLanguage();
@@ -15,6 +15,11 @@ const Layout = ({ children }) => {
     { name: t('transactions'), icon: Receipt, path: '/transactions' },
     { name: t('categories'), icon: PlusCircle, path: '/categories' },
   ];
+
+  // Default User Data if empty
+  const displayName = user?.name || 'Guest User';
+  const displayEmail = user?.email || 'guest@example.com';
+  const userInitial = displayName.charAt(0).toUpperCase();
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-300">
@@ -52,10 +57,12 @@ const Layout = ({ children }) => {
         <div className="mt-auto p-6 space-y-4">
           <div className="bg-gray-50 dark:bg-slate-700/30 rounded-3xl p-4 border border-gray-100 dark:border-slate-700/50">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary-400 to-primary-600 border-2 border-white dark:border-slate-600 shadow-sm" />
+              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-primary-400 to-primary-600 border-2 border-white dark:border-slate-600 shadow-sm flex items-center justify-center text-white font-bold text-xs">
+                {userInitial}
+              </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold truncate dark:text-white">{user?.name || 'User'}</p>
-                <p className="text-[10px] text-gray-400 truncate font-medium">{user?.email}</p>
+                <p className="text-sm font-bold truncate dark:text-white">{displayName}</p>
+                <p className="text-[10px] text-gray-400 truncate font-medium">{displayEmail}</p>
               </div>
             </div>
             
@@ -108,7 +115,7 @@ const Layout = ({ children }) => {
       {/* Main Content */}
       <main className="flex-1 overflow-y-auto relative pb-20 lg:pb-0">
         <div className="max-w-7xl mx-auto p-4 lg:p-10">
-          {children}
+          <Outlet />
         </div>
 
         {/* Desktop Footer Watermark */}
