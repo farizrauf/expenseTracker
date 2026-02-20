@@ -28,3 +28,7 @@ func (s *CategoryService) GetAll(userID uint) ([]models.Category, error) {
 func (s *CategoryService) Delete(id uint) error {
 	return s.repo.Delete(id)
 }
+
+func (s *CategoryService) GetOrCreateByName(userID uint, name string) (*models.Category, error) {
+	return s.repo.GetOrCreateByName(userID, name)
+}

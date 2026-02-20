@@ -30,7 +30,7 @@ func main() {
 	// Initialize Controllers
 	authCtrl := controllers.NewAuthController(authService)
 	catCtrl := controllers.NewCategoryController(catService)
-	transCtrl := controllers.NewTransactionController(transService)
+	transCtrl := controllers.NewTransactionController(transService, catService)
 
 	// Setup Gin
 	app := gin.Default()

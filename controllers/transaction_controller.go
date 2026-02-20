@@ -11,20 +11,22 @@ import (
 )
 
 type TransactionController struct {
-	service *services.TransactionService
+	service    *services.TransactionService
+	catService *services.CategoryService
 }
 
-func NewTransactionController(service *services.TransactionService) *TransactionController {
-	return &TransactionController{service}
+func NewTransactionController(service *services.TransactionService, catService *services.CategoryService) *TransactionController {
+	return &TransactionController{service, catService}
 }
 
 func (ctrl *TransactionController) Create(c *gin.Context) {
 	var input struct {
-		Type        string    `json:"type" binding:"required"`
-		Amount      float64   `json:"amount" binding:"required"`
-		CategoryID  uint      `json:"category_id" binding:"required"`
-		Description string    `json:"description"`
-		Date        time.Time `json:"date" binding:"required"`
+		Type         string    `json:"type" binding:"required"`
+		Amount       float64   `json:"amount" binding:"required"`
+		CategoryID   uint      `json:"category_id"`
+		CategoryName string    `json:"category_name"`
+		Description  string    `json:"description"`
+		Date         time.Time `json:"date" binding:"required"`
 	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -33,6 +35,22 @@ func (ctrl *TransactionController) Create(c *gin.Context) {
 	}
 
 	userID := c.MustGet("user_id").(uint)
+
+	// Handle inline category creation if ID is not provided but name is
+	if input.CategoryID == 0 && input.CategoryName != "" {
+		cat, err := ctrl.catService.GetOrCreateByName(userID, input.CategoryName)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to resolve category"})
+			return
+		}
+		input.CategoryID = cat.ID
+	}
+
+	if input.CategoryID == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Category is required"})
+		return
+	}
+
 	transaction := &models.Transaction{
 		UserID:      userID,
 		Type:        input.Type,
@@ -97,15 +115,31 @@ func (ctrl *TransactionController) Update(c *gin.Context) {
 	userID := c.MustGet("user_id").(uint)
 
 	var input struct {
-		Type        string    `json:"type" binding:"required"`
-		Amount      float64   `json:"amount" binding:"required"`
-		CategoryID  uint      `json:"category_id" binding:"required"`
-		Description string    `json:"description"`
-		Date        time.Time `json:"date" binding:"required"`
+		Type         string    `json:"type" binding:"required"`
+		Amount       float64   `json:"amount" binding:"required"`
+		CategoryID   uint      `json:"category_id"`
+		CategoryName string    `json:"category_name"`
+		Description  string    `json:"description"`
+		Date         time.Time `json:"date" binding:"required"`
 	}
 
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// Handle inline category creation if ID is not provided but name is
+	if input.CategoryID == 0 && input.CategoryName != "" {
+		cat, err := ctrl.catService.GetOrCreateByName(userID, input.CategoryName)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to resolve category"})
+			return
+		}
+		input.CategoryID = cat.ID
+	}
+
+	if input.CategoryID == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Category is required"})
 		return
 	}
 

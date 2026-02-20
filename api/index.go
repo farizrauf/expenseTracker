@@ -32,7 +32,7 @@ func init() {
 	// Initialize Controllers
 	authCtrl := controllers.NewAuthController(authService)
 	catCtrl := controllers.NewCategoryController(catService)
-	transCtrl := controllers.NewTransactionController(transService)
+	transCtrl := controllers.NewTransactionController(transService, catService)
 
 	// Setup Gin
 	gin.SetMode(gin.ReleaseMode)

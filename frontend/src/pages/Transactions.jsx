@@ -12,6 +12,7 @@ const Transactions = () => {
     type: 'expense',
     amount: '',
     category_id: '',
+    category_name: '',
     description: '',
     date: new Date().toISOString().split('T')[0]
   });
@@ -45,10 +46,12 @@ const Transactions = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const isNewCategory = formData.category_id === 'new';
       const payload = {
         ...formData,
         amount: parseFloat(formData.amount),
-        category_id: parseInt(formData.category_id),
+        category_id: isNewCategory ? 0 : parseInt(formData.category_id),
+        category_name: isNewCategory ? formData.category_name : '',
         date: new Date(formData.date).toISOString()
       };
 
@@ -84,6 +87,7 @@ const Transactions = () => {
       type: 'expense',
       amount: '',
       category_id: '',
+      category_name: '',
       description: '',
       date: new Date().toISOString().split('T')[0]
     });
@@ -245,15 +249,37 @@ const Transactions = () => {
                 </div>
                 <div className="space-y-1">
                   <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category</label>
-                  <select
-                    required
-                    className="w-full px-4 py-3 bg-gray-50 dark:bg-slate-700/50 border-none rounded-2xl focus:ring-2 focus:ring-primary-500 dark:text-white transition-all"
-                    value={formData.category_id}
-                    onChange={(e) => setFormData({...formData, category_id: e.target.value})}
-                  >
-                    <option value="" className="dark:bg-slate-800">Select</option>
-                    {categories.map(c => <option key={c.id} value={c.id} className="dark:bg-slate-800">{c.name}</option>)}
-                  </select>
+                  <div className="space-y-2">
+                    <select
+                      required
+                      className="w-full px-4 py-3 bg-gray-50 dark:bg-slate-700/50 border-none rounded-2xl focus:ring-2 focus:ring-primary-500 dark:text-white transition-all"
+                      value={formData.category_id}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setFormData({
+                          ...formData, 
+                          category_id: val,
+                          category_name: val === 'new' ? formData.category_name : ''
+                        });
+                      }}
+                    >
+                      <option value="" className="dark:bg-slate-800">Select</option>
+                      {categories.map(c => <option key={c.id} value={c.id} className="dark:bg-slate-800">{c.name}</option>)}
+                      <option value="new" className="dark:bg-slate-800 font-bold text-primary-600">+ Create New...</option>
+                    </select>
+                    
+                    {formData.category_id === 'new' && (
+                      <input
+                        type="text"
+                        required
+                        placeholder="Enter new category name"
+                        className="w-full px-4 py-3 bg-primary-50 dark:bg-primary-900/10 border border-primary-100 dark:border-primary-900/30 rounded-2xl focus:ring-2 focus:ring-primary-500 dark:text-white transition-all animate-in slide-in-from-top-2"
+                        value={formData.category_name}
+                        onChange={(e) => setFormData({...formData, category_name: e.target.value})}
+                        autoFocus
+                      />
+                    )}
+                  </div>
                 </div>
               </div>
 
