@@ -33,19 +33,19 @@ const Categories = () => {
       setNewName('');
       fetchCategories();
     } catch (err) {
-      alert('Failed to add category');
+      alert('Gagal menambahkan kategori');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this category? This will not delete transactions using it, but they might lose their category reference.')) {
+    if (window.confirm('Apakah Anda yakin ingin menghapus kategori ini? Transaksi yang menggunakan kategori ini tidak akan terhapus, namun referensi kategorinya mungkin akan hilang.')) {
       try {
         await api.delete(`/categories/${id}`);
         fetchCategories();
       } catch (err) {
-        alert('Failed to delete category');
+        alert('Gagal menghapus kategori');
       }
     }
   };
@@ -59,8 +59,8 @@ const Categories = () => {
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-500">
       <header>
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">Category Management</h1>
-        <p className="text-gray-500 dark:text-gray-400">Organize your transactions with custom categories</p>
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">Manajemen Kategori</h1>
+        <p className="text-gray-500 dark:text-gray-400">Atur transaksi Anda dengan kategori kustom</p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -69,15 +69,15 @@ const Categories = () => {
           <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm sticky top-8 transition-colors">
             <h2 className="text-lg font-bold mb-4 flex items-center gap-2 dark:text-white">
               <Plus size={20} className="text-primary-600 dark:text-primary-400" />
-              New Category
+              Kategori Baru
             </h2>
             <form onSubmit={handleAddCategory} className="space-y-4">
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category Name</label>
+                <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Nama Kategori</label>
                 <input
                   type="text"
                   required
-                  placeholder="e.g. Subsistence"
+                  placeholder="misal: Kebutuhan Pokok"
                   className="w-full px-4 py-3 bg-gray-50 dark:bg-slate-700/50 border-none rounded-2xl focus:ring-2 focus:ring-primary-500 dark:text-white outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-500"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
@@ -88,7 +88,7 @@ const Categories = () => {
                 disabled={isSubmitting}
                 className="w-full py-3 bg-primary-600 text-white font-bold rounded-2xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-100 dark:shadow-none flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                {isSubmitting ? 'Adding...' : 'Add Category'}
+                {isSubmitting ? 'Menambahkan...' : 'Tambah Kategori'}
               </button>
             </form>
           </div>
@@ -100,10 +100,10 @@ const Categories = () => {
             <div className="p-6 border-b border-gray-50 dark:border-slate-700/50 flex items-center justify-between">
               <h2 className="text-lg font-bold flex items-center gap-2 dark:text-white">
                 <Layers size={20} className="text-primary-600 dark:text-primary-400" />
-                All Categories
+                Semua Kategori
               </h2>
               <span className="bg-primary-50 dark:bg-primary-900/20 text-primary-600 dark:text-primary-400 px-3 py-1 rounded-full text-xs font-bold transition-colors">
-                {categories.length} Total
+                Total: {categories.length}
               </span>
             </div>
             <div className="divide-y divide-gray-50 dark:divide-slate-700/50">
@@ -115,7 +115,7 @@ const Categories = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-gray-900 dark:text-white transition-colors">{category.name}</h3>
-                      <p className="text-xs text-gray-400 dark:text-gray-500">Created: {new Date(category.created_at).toLocaleDateString()}</p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500">Dibuat: {new Date(category.created_at).toLocaleDateString('id-ID')}</p>
                     </div>
                   </div>
                   {/* Prevent deleting if it's a default system category if we have that logic, but here categories are user-linked or global */}
@@ -130,7 +130,7 @@ const Categories = () => {
               {categories.length === 0 && (
                 <div className="py-20 text-center text-gray-400">
                   <Tag size={48} className="mx-auto mb-4 opacity-20" />
-                  <p>No categories found. Create one to get started.</p>
+                  <p>Belum ada kategori. Buat satu untuk memulai.</p>
                 </div>
               )}
             </div>

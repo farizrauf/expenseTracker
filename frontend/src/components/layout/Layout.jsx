@@ -9,9 +9,9 @@ const Layout = () => {
   const location = useLocation();
 
   const navItems = [
-    { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
-    { name: 'Transactions', icon: Receipt, path: '/transactions' },
-    { name: 'Categories', icon: PlusCircle, path: '/categories' },
+    { name: 'Dasbor', icon: LayoutDashboard, path: '/' },
+    { name: 'Transaksi', icon: Receipt, path: '/transactions' },
+    { name: 'Kategori', icon: PlusCircle, path: '/categories' },
   ];
 
   return (
@@ -60,11 +60,11 @@ const Layout = () => {
             className="flex items-center space-x-3 w-full p-3 text-red-500 hover:bg-red-50 rounded-xl transition-all"
           >
             <LogOut size={20} />
-            <span className="font-medium">Logout</span>
+            <span className="font-medium">Keluar</span>
           </button>
           <div className="mt-4 px-2 pt-4 border-t border-gray-100 dark:border-slate-700">
             <p className="text-[10px] text-center text-gray-400 dark:text-gray-500 uppercase tracking-widest font-semibold">
-              Developed by Fariz Rauf
+              Dikembangkan oleh Fariz Rauf
             </p>
           </div>
         </div>
@@ -77,7 +77,7 @@ const Layout = () => {
         </div>
         <footer className="mt-8 pb-8 md:hidden text-center">
           <p className="text-[10px] text-gray-400 dark:text-gray-500 uppercase tracking-widest font-semibold">
-            Developed by Fariz Rauf
+            Dikembangkan oleh Fariz Rauf
           </p>
         </footer>
       </main>
@@ -101,14 +101,14 @@ const Layout = () => {
           className="flex flex-col items-center space-y-1 text-gray-400 dark:text-gray-500"
         >
           {theme === 'light' ? <Moon size={24} /> : <Sun size={24} />}
-          <span className="text-[10px] font-medium">Theme</span>
+          <span className="text-[10px] font-medium">Tema</span>
         </button>
         <button
           onClick={logout}
           className="flex flex-col items-center space-y-1 text-gray-400 dark:text-gray-500"
         >
           <LogOut size={24} />
-          <span className="text-[10px] font-medium">Logout</span>
+          <span className="text-[10px] font-medium">Keluar</span>
         </button>
       </nav>
     </div>

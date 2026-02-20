@@ -64,7 +64,7 @@ const Transactions = () => {
       handleCloseModal();
       fetchData();
     } catch (err) {
-      alert('Failed to save transaction');
+      alert('Gagal menyimpan transaksi');
     }
   };
 
@@ -94,12 +94,12 @@ const Transactions = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this transaction?')) {
+    if (window.confirm('Apakah Anda yakin ingin menghapus transaksi ini?')) {
       try {
         await api.delete(`/transactions/${id}`);
         fetchData();
       } catch (err) {
-        alert('Failed to delete');
+        alert('Gagal menghapus');
       }
     }
   };
@@ -113,8 +113,8 @@ const Transactions = () => {
     <div className="space-y-6">
       <header className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">Transactions</h1>
-          <p className="text-gray-500 dark:text-gray-400">View and manage all your records</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">Transaksi</h1>
+          <p className="text-gray-500 dark:text-gray-400">Lihat dan kelola semua catatan Anda</p>
         </div>
         <button 
           onClick={() => {
@@ -124,7 +124,7 @@ const Transactions = () => {
           className="bg-primary-600 text-white px-5 py-2.5 rounded-2xl flex items-center space-x-2 hover:bg-primary-700 transition-all shadow-lg shadow-primary-100 dark:shadow-none"
         >
           <Plus size={20} />
-          <span className="font-semibold">Add Record</span>
+          <span className="font-semibold">Tambah Catatan</span>
         </button>
       </header>
 
@@ -134,13 +134,13 @@ const Transactions = () => {
           <Search className="absolute left-4 top-3 text-gray-400 dark:text-gray-500" size={18} />
           <input 
             type="text" 
-            placeholder="Search transactions..." 
+            placeholder="Cari transaksi..." 
             className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-slate-700/50 rounded-xl border-none focus:ring-2 focus:ring-primary-500 outline-none dark:text-white dark:placeholder:text-gray-500 transition-all"
           />
         </div>
         <div className="flex gap-2">
           <select className="bg-gray-50 dark:bg-slate-700/50 px-4 py-2.5 rounded-xl border-none focus:ring-2 focus:ring-primary-500 outline-none text-sm font-medium dark:text-white transition-all">
-            <option>All Categories</option>
+            <option>Semua Kategori</option>
             {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
           <button className="bg-gray-50 dark:bg-slate-700/50 p-2.5 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-600 transition-all">
@@ -155,11 +155,11 @@ const Transactions = () => {
           <table className="w-full text-left">
             <thead className="bg-gray-50 dark:bg-slate-700/30 text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">
               <tr>
-                <th className="px-6 py-4">Transaction</th>
-                <th className="px-6 py-4">Category</th>
-                <th className="px-6 py-4">Date</th>
-                <th className="px-6 py-4">Amount</th>
-                <th className="px-6 py-4 text-right">Actions</th>
+                <th className="px-6 py-4">Transaksi</th>
+                <th className="px-6 py-4">Kategori</th>
+                <th className="px-6 py-4">Tanggal</th>
+                <th className="px-6 py-4">Jumlah</th>
+                <th className="px-6 py-4 text-right">Aksi</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50 text-sm">
@@ -170,7 +170,7 @@ const Transactions = () => {
                       <div className={`p-2 rounded-lg ${t.type === 'income' ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400' : 'bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400'}`}>
                         {t.type === 'income' ? <ArrowDownLeft size={16} /> : <ArrowUpRight size={16} />}
                       </div>
-                      <span className="font-semibold text-gray-900 dark:text-white">{t.description || 'No description'}</span>
+                      <span className="font-semibold text-gray-900 dark:text-white">{t.description || 'Tanpa keterangan'}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
@@ -206,7 +206,7 @@ const Transactions = () => {
           </table>
           {transactions.length === 0 && !loading && (
             <div className="py-20 text-center text-gray-400">
-              No records found.
+              Tidak ada catatan yang ditemukan.
             </div>
           )}
         </div>
@@ -216,7 +216,7 @@ const Transactions = () => {
       {showModal && (
         <div className="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all">
           <div className="bg-white dark:bg-slate-800 w-full max-w-lg rounded-3xl p-8 shadow-2xl animate-in zoom-in duration-300 transition-colors">
-            <h2 className="text-xl font-bold mb-6 dark:text-white uppercase tracking-wider">{editingId ? 'Edit Transaction' : 'New Transaction'}</h2>
+            <h2 className="text-xl font-bold mb-6 dark:text-white uppercase tracking-wider">{editingId ? 'Edit Transaksi' : 'Transaksi Baru'}</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="flex bg-gray-100 dark:bg-slate-700 p-1 rounded-2xl">
                 <button
@@ -224,20 +224,20 @@ const Transactions = () => {
                   onClick={() => setFormData({...formData, type: 'expense'})}
                   className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${formData.type === 'expense' ? 'bg-white dark:bg-slate-600 text-rose-600 dark:text-rose-400 shadow-sm' : 'text-gray-500 dark:text-gray-400'}`}
                 >
-                  Expense
+                  Pengeluaran
                 </button>
                 <button
                   type="button"
                   onClick={() => setFormData({...formData, type: 'income'})}
                   className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${formData.type === 'income' ? 'bg-white dark:bg-slate-600 text-emerald-600 dark:text-emerald-400 shadow-sm' : 'text-gray-500 dark:text-gray-400'}`}
                 >
-                  Income
+                  Pemasukan
                 </button>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount (IDR)</label>
+                  <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Jumlah (IDR)</label>
                   <input
                     type="number"
                     required
@@ -248,7 +248,7 @@ const Transactions = () => {
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category</label>
+                  <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Kategori</label>
                   <div className="space-y-2">
                     <select
                       required
@@ -263,16 +263,16 @@ const Transactions = () => {
                         });
                       }}
                     >
-                      <option value="" className="dark:bg-slate-800">Select</option>
+                      <option value="" className="dark:bg-slate-800">Pilih</option>
                       {categories.map(c => <option key={c.id} value={c.id} className="dark:bg-slate-800">{c.name}</option>)}
-                      <option value="new" className="dark:bg-slate-800 font-bold text-primary-600">+ Create New...</option>
+                      <option value="new" className="dark:bg-slate-800 font-bold text-primary-600">+ Buat Baru...</option>
                     </select>
                     
                     {formData.category_id === 'new' && (
                       <input
                         type="text"
                         required
-                        placeholder="Enter new category name"
+                        placeholder="Masukkan nama kategori baru"
                         className="w-full px-4 py-3 bg-primary-50 dark:bg-primary-900/10 border border-primary-100 dark:border-primary-900/30 rounded-2xl focus:ring-2 focus:ring-primary-500 dark:text-white transition-all animate-in slide-in-from-top-2"
                         value={formData.category_name}
                         onChange={(e) => setFormData({...formData, category_name: e.target.value})}
@@ -284,7 +284,7 @@ const Transactions = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</label>
+                <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Tanggal</label>
                 <input
                   type="date"
                   required
@@ -295,10 +295,10 @@ const Transactions = () => {
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Description</label>
+                <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Keterangan</label>
                 <textarea
                   className="w-full px-4 py-3 bg-gray-50 dark:bg-slate-700/50 border-none rounded-2xl focus:ring-2 focus:ring-primary-500 dark:text-white transition-all"
-                  placeholder="e.g. Lunch with client"
+                  placeholder="misal: Makan siang dengan klien"
                   rows="3"
                   value={formData.description}
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
@@ -311,13 +311,13 @@ const Transactions = () => {
                   onClick={handleCloseModal}
                   className="flex-1 py-3 bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 font-bold rounded-2xl hover:bg-gray-200 dark:hover:bg-slate-600 transition-all"
                 >
-                  Cancel
+                  Batal
                 </button>
                 <button
                   type="submit"
                   className="flex-1 py-3 bg-primary-600 text-white font-bold rounded-2xl hover:bg-primary-700 transition-all shadow-lg shadow-primary-100 dark:shadow-none"
                 >
-                  Save Transaction
+                  Simpan Transaksi
                 </button>
               </div>
             </form>

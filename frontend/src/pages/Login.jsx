@@ -20,7 +20,7 @@ const Login = () => {
       await login(email, password);
       navigate('/');
     } catch (err) {
-      setError(err.response?.data?.error || 'Login failed. Please check your credentials.');
+      setError(err.response?.data?.error || 'Login gagal. Silakan periksa kredensial Anda.');
     } finally {
       setLoading(false);
     }
@@ -31,8 +31,8 @@ const Login = () => {
       <div className="w-full max-w-md">
         <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-xl p-8 space-y-8 border border-white dark:border-slate-700 transition-colors">
           <div className="text-center">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white transition-colors">Welcome Back</h1>
-            <p className="text-gray-500 dark:text-gray-400 mt-2">Manage your finance with ease</p>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white transition-colors">Selamat Datang</h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-2">Kelola keuangan Anda dengan mudah</p>
           </div>
 
           {error && (
@@ -43,14 +43,14 @@ const Login = () => {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 ml-1">Email Address</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 ml-1">Alamat Email</label>
               <div className="relative">
                 <Mail className="absolute left-4 top-3.5 text-gray-400 dark:text-gray-500" size={20} />
                 <input
                   type="email"
                   required
                   className="w-full pl-12 pr-4 py-3.5 bg-gray-50 dark:bg-slate-700/50 border border-gray-100 dark:border-slate-700 rounded-2xl focus:ring-2 focus:ring-primary-500 focus:bg-white dark:focus:bg-slate-700 outline-none dark:text-white transition-all"
-                  placeholder="name@example.com"
+                  placeholder="nama@contoh.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -58,7 +58,7 @@ const Login = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 ml-1">Password</label>
+              <label className="text-sm font-medium text-gray-700 dark:text-gray-300 ml-1">Kata Sandi</label>
               <div className="relative">
                 <Lock className="absolute left-4 top-3.5 text-gray-400 dark:text-gray-500" size={20} />
                 <input
@@ -86,7 +86,7 @@ const Login = () => {
             >
               {loading ? <Loader2 className="animate-spin" size={24} /> : (
                 <>
-                  <span>Sign In</span>
+                  <span>Masuk</span>
                   <ArrowRight size={20} />
                 </>
               )}
@@ -95,9 +95,9 @@ const Login = () => {
 
           <div className="text-center">
             <p className="text-gray-500 dark:text-gray-400 text-sm">
-              Don't have an account?{' '}
+              Belum punya akun?{' '}
               <Link to="/register" className="text-primary-600 dark:text-primary-400 font-bold hover:underline transition-colors">
-                Register free
+                Daftar gratis
               </Link>
             </p>
           </div>

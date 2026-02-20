@@ -60,10 +60,10 @@ const Dashboard = () => {
   const COLORS = ['#3b82f6', '#10b981', '#f43f5e', '#f59e0b', '#8b5cf6', '#06b6d4'];
 
   const months = [
-    { v: 1, n: 'January' }, { v: 2, n: 'February' }, { v: 3, n: 'March' },
-    { v: 4, n: 'April' }, { v: 5, n: 'May' }, { v: 6, n: 'June' },
-    { v: 7, n: 'July' }, { v: 8, n: 'August' }, { v: 9, n: 'September' },
-    { v: 10, n: 'October' }, { v: 11, n: 'November' }, { v: 12, n: 'December' }
+    { v: 1, n: 'Januari' }, { v: 2, n: 'Februari' }, { v: 3, n: 'Maret' },
+    { v: 4, n: 'April' }, { v: 5, n: 'Mei' }, { v: 6, n: 'Juni' },
+    { v: 7, n: 'Juli' }, { v: 8, n: 'Agustus' }, { v: 9, n: 'September' },
+    { v: 10, n: 'Oktober' }, { v: 11, n: 'November' }, { v: 12, n: 'Desember' }
   ];
 
   const years = [now.getFullYear(), now.getFullYear() - 1];
@@ -72,8 +72,8 @@ const Dashboard = () => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold dark:text-white transition-colors">Dashboard</h1>
-          <p className="text-gray-500 dark:text-gray-400">Financial overview for your selected period</p>
+          <h1 className="text-2xl font-bold dark:text-white transition-colors">Dasbor</h1>
+          <p className="text-gray-500 dark:text-gray-400">Ringkasan keuangan untuk periode pilihan Anda</p>
         </div>
         
         <div className="flex items-center gap-2">
@@ -99,7 +99,7 @@ const Dashboard = () => {
             className="bg-primary-600 text-white p-2.5 md:px-4 md:py-2 rounded-xl flex items-center space-x-2 hover:bg-primary-700 transition-all shadow-lg shadow-primary-200 dark:shadow-none"
           >
             <Plus size={20} />
-            <span className="hidden md:inline font-medium">New Record</span>
+            <span className="hidden md:inline font-medium">Catat Baru</span>
           </button>
         </div>
       </header>
@@ -119,10 +119,10 @@ const Dashboard = () => {
                 <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl">
                   <Wallet size={24} />
                 </div>
-                <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Cash Flow</span>
+                <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Arus Kas</span>
               </div>
               <h2 className="text-2xl font-bold dark:text-white transition-colors">{formatCurrency(data?.current_balance)}</h2>
-              <p className="text-sm text-gray-400 mt-1">Monthly net change</p>
+              <p className="text-sm text-gray-400 mt-1">Perubahan bersih bulan ini</p>
             </div>
 
             <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 card-hover transition-colors">
@@ -130,10 +130,10 @@ const Dashboard = () => {
                 <div className="p-3 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-2xl">
                   <TrendingUp size={24} />
                 </div>
-                <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Total Income</span>
+                <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Total Pemasukan</span>
               </div>
               <h2 className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 transition-colors">{formatCurrency(data?.total_income)}</h2>
-              <p className="text-sm text-emerald-500 mt-1 font-medium">{months[filter.month-1].n} income</p>
+              <p className="text-sm text-emerald-500 mt-1 font-medium">Pemasukan {months[filter.month-1].n}</p>
             </div>
 
             <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 card-hover transition-colors">
@@ -141,16 +141,16 @@ const Dashboard = () => {
                 <div className="p-3 bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 rounded-2xl">
                   <TrendingDown size={24} />
                 </div>
-                <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Total Expenses</span>
+                <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Total Pengeluaran</span>
               </div>
               <h2 className="text-2xl font-bold text-rose-600 dark:text-rose-400 transition-colors">{formatCurrency(data?.total_expense)}</h2>
-              <p className="text-sm text-rose-500 mt-1 font-medium">{months[filter.month-1].n} expenses</p>
+              <p className="text-sm text-rose-500 mt-1 font-medium">Pengeluaran {months[filter.month-1].n}</p>
             </div>
           </div>
 
           {/* Main Charts Section */}
           <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 transition-colors">
-            <h3 className="text-lg font-bold mb-6 dark:text-white">Monthly Cash Flow Trend</h3>
+            <h3 className="text-lg font-bold mb-6 dark:text-white">Tren Arus Kas Bulanan</h3>
             <div className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData}>
@@ -171,8 +171,8 @@ const Dashboard = () => {
                     contentStyle={{borderRadius: '16px', border: 'none', boxShadow: '0 10px 15px -3px rgba(0,0,0,0.1)', backgroundColor: theme === 'dark' ? '#1e293b' : '#fff'}}
                     itemStyle={{fontSize: '12px', fontWeight: 'bold'}}
                   />
-                  <Area type="monotone" dataKey="income" stroke="#10b981" fillOpacity={1} fill="url(#colorIncome)" strokeWidth={3} />
-                  <Area type="monotone" dataKey="expense" stroke="#f43f5e" fillOpacity={1} fill="url(#colorExpense)" strokeWidth={3} />
+                  <Area type="monotone" dataKey="income" name="Pemasukan" stroke="#10b981" fillOpacity={1} fill="url(#colorIncome)" strokeWidth={3} />
+                  <Area type="monotone" dataKey="expense" name="Pengeluaran" stroke="#f43f5e" fillOpacity={1} fill="url(#colorExpense)" strokeWidth={3} />
                 </AreaChart>
               </ResponsiveContainer>
             </div>
@@ -181,7 +181,7 @@ const Dashboard = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Pie Chart Section */}
             <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 transition-colors">
-              <h3 className="text-lg font-bold mb-6 dark:text-white">Expense Distribution</h3>
+              <h3 className="text-lg font-bold mb-6 dark:text-white">Distribusi Pengeluaran</h3>
               <div className="flex flex-col md:flex-row items-center gap-6">
                 <div className="h-64 w-full md:w-1/2">
                   <ResponsiveContainer width="100%" height="100%">
@@ -216,7 +216,7 @@ const Dashboard = () => {
                       <span className="text-xs font-bold dark:text-white">{formatCurrency(item.value)}</span>
                     </div>
                   ))}
-                  {pieData.length === 0 && <p className="text-gray-400 text-sm italic">No data for this period</p>}
+                  {pieData.length === 0 && <p className="text-gray-400 text-sm italic">Tidak ada data untuk periode ini</p>}
                 </div>
               </div>
             </div>
@@ -224,12 +224,12 @@ const Dashboard = () => {
             {/* Recent Transactions Section */}
             <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 transition-colors">
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-bold dark:text-white">Recent Records</h3>
+                <h3 className="text-lg font-bold dark:text-white">Catatan Terakhir</h3>
                 <button 
                   onClick={() => navigate('/transactions')}
                   className="text-primary-600 dark:text-primary-400 text-sm font-semibold hover:underline"
                 >
-                  See All
+                  Lihat Semua
                 </button>
               </div>
               <div className="space-y-4">
@@ -242,7 +242,7 @@ const Dashboard = () => {
                       <div>
                         <p className="font-semibold text-gray-900 dark:text-white text-sm">{t.description || t.category?.name}</p>
                         <p className="text-[10px] text-gray-400 dark:text-gray-500 font-medium lowercase">
-                          {new Date(t.date).toLocaleDateString()} • {t.category?.name}
+                          {new Date(t.date).toLocaleDateString('id-ID')} • {t.category?.name}
                         </p>
                       </div>
                     </div>
@@ -250,7 +250,7 @@ const Dashboard = () => {
                       {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount)}
                     </p>
                   </div>
-                )) : <p className="text-center text-gray-400 py-10">No records yet.</p>}
+                )) : <p className="text-center text-gray-400 py-10">Belum ada catatan.</p>}
               </div>
             </div>
           </div>
