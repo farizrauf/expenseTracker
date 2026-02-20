@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { 
   TrendingUp, TrendingDown, Wallet, Plus, 
@@ -10,6 +11,7 @@ import {
 } from 'recharts';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -40,11 +42,15 @@ const Dashboard = () => {
   }).format(val || 0);
 
   // Use data from backend for the chart
-  const chartData = data?.time_series?.map(item => ({
-    name: new Date(item.date).toLocaleDateString('en-US', { weekday: 'short' }),
-    income: item.income,
-    expense: item.expense
-  })) || [];
+  const chartData = data?.time_series?.map(item => {
+    // Robust date parsing for the chart labels
+    const d = new Date(item.date);
+    return {
+      name: d.toLocaleDateString('en-US', { weekday: 'short' }),
+      income: item.income,
+      expense: item.expense
+    };
+  }) || [];
 
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
@@ -53,7 +59,10 @@ const Dashboard = () => {
           <h1 className="text-2xl font-bold">Dashboard</h1>
           <p className="text-gray-500">Welcome back, track your expenses here.</p>
         </div>
-        <button className="bg-primary-600 text-white px-4 py-2 rounded-xl flex items-center space-x-2 hover:bg-primary-700 transition-all shadow-lg shadow-primary-200">
+        <button 
+          onClick={() => navigate('/transactions')}
+          className="bg-primary-600 text-white px-4 py-2 rounded-xl flex items-center space-x-2 hover:bg-primary-700 transition-all shadow-lg shadow-primary-200"
+        >
           <Plus size={20} />
           <span className="hidden md:inline font-medium">New Transaction</span>
         </button>

@@ -76,13 +76,15 @@ func (r *TransactionRepository) GetTimeSeriesData(userID uint, days int) ([]map[
 		Total float64
 	}
 
-	startDate := time.Now().AddDate(0, 0, -days)
+	loc, _ := time.LoadLocation("Asia/Jakarta")
+	now := time.Now().In(loc)
+	startDate := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, loc).AddDate(0, 0, -days)
 
 	err := r.db.Model(&models.Transaction{}).
-		Select("DATE(date) as date, type, sum(amount) as total").
+		Select("DATE(date AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Jakarta') as date, type, sum(amount) as total").
 		Where("user_id = ? AND date >= ?", userID, startDate).
-		Group("DATE(date), type").
-		Order("DATE(date) asc").
+		Group("1, type").
+		Order("1 asc").
 		Scan(&results).Error
 
 	if err != nil {
