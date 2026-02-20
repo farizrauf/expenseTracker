@@ -1,17 +1,42 @@
 {
-  "name": "Finance Tracker",
+  "name": "Finance Tracker - Modern Fintech",
   "short_name": "Finance",
-  "description": "Modern Finance Tracker App",
+  "description": "Manage your expenses and incomes with a modern, glassmorphed fintech dashboard. Built with Go and React.",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "any",
   "background_color": "#0f172a",
   "theme_color": "#0ea5e9",
+  "categories": ["finance", "productivity"],
   "icons": [
     {
       "src": "/icon.svg",
-      "sizes": "any",
+      "sizes": "192x192 512x512",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/mobile_screenshot.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Finance Dashboard on Mobile"
+    },
+    {
+      "src": "/desktop_screenshot.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Full Analytics Dashboard on Desktop"
     }
   ]
 }
