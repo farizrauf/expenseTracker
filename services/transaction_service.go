@@ -29,8 +29,8 @@ func (s *TransactionService) GetAll(userID uint, filter map[string]interface{}) 
 	return s.repo.FindAll(userID, filter)
 }
 
-func (s *TransactionService) GetDashboard(userID uint) (map[string]interface{}, error) {
-	summary, err := s.repo.GetSummary(userID)
+func (s *TransactionService) GetDashboard(userID uint, month int, year int) (map[string]interface{}, error) {
+	summary, err := s.repo.GetSummary(userID, month, year)
 	if err != nil {
 		return nil, err
 	}
@@ -39,7 +39,7 @@ func (s *TransactionService) GetDashboard(userID uint) (map[string]interface{}, 
 	expense := summary["expense"]
 	balance := income - expense
 
-	// Get last 5 transactions
+	// Get last 5 transactions (unfiltered for now to show context, or could be filtered)
 	lastTransactions, err := s.repo.FindAll(userID, map[string]interface{}{})
 	if err != nil {
 		return nil, err
@@ -48,17 +48,24 @@ func (s *TransactionService) GetDashboard(userID uint) (map[string]interface{}, 
 		lastTransactions = lastTransactions[:5]
 	}
 
-	// Get time-series data for the last 7 days
-	timeSeries, err := s.repo.GetTimeSeriesData(userID, 6) // 6 makes it 7 days total including today
+	// Get time-series data for the filtered month or last 7 days
+	timeSeries, err := s.repo.GetTimeSeriesData(userID, month, year)
+	if err != nil {
+		return nil, err
+	}
+
+	// Get category breakdown for the filtered month
+	breakdown, err := s.repo.GetCategoryBreakdown(userID, month, year)
 	if err != nil {
 		return nil, err
 	}
 
 	return map[string]interface{}{
-		"total_income":      income,
-		"total_expense":     expense,
-		"current_balance":   balance,
-		"last_transactions": lastTransactions,
-		"time_series":       timeSeries,
+		"total_income":       income,
+		"total_expense":      expense,
+		"current_balance":    balance,
+		"last_transactions":  lastTransactions,
+		"time_series":        timeSeries,
+		"category_breakdown": breakdown,
 	}, nil
 }

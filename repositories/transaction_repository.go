@@ -51,16 +51,23 @@ func (r *TransactionRepository) FindAll(userID uint, filter map[string]interface
 	return transactions, err
 }
 
-func (r *TransactionRepository) GetSummary(userID uint) (map[string]float64, error) {
+func (r *TransactionRepository) GetSummary(userID uint, month int, year int) (map[string]float64, error) {
 	var results []struct {
 		Type  string
 		Total float64
 	}
-	err := r.db.Model(&models.Transaction{}).
+
+	query := r.db.Model(&models.Transaction{}).
 		Select("type, sum(amount) as total").
-		Where("user_id = ?", userID).
-		Group("type").
-		Scan(&results).Error
+		Where("user_id = ?", userID)
+
+	if month > 0 && year > 0 {
+		startDate := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
+		endDate := startDate.AddDate(0, 1, 0)
+		query = query.Where("date >= ? AND date < ?", startDate, endDate)
+	}
+
+	err := query.Group("type").Scan(&results).Error
 
 	summary := make(map[string]float64)
 	for _, res := range results {
@@ -69,7 +76,7 @@ func (r *TransactionRepository) GetSummary(userID uint) (map[string]float64, err
 	return summary, err
 }
 
-func (r *TransactionRepository) GetTimeSeriesData(userID uint, days int) ([]map[string]interface{}, error) {
+func (r *TransactionRepository) GetTimeSeriesData(userID uint, month int, year int) ([]map[string]interface{}, error) {
 	var results []struct {
 		Date  time.Time
 		Type  string
@@ -77,12 +84,20 @@ func (r *TransactionRepository) GetTimeSeriesData(userID uint, days int) ([]map[
 	}
 
 	loc, _ := time.LoadLocation("Asia/Jakarta")
-	now := time.Now().In(loc)
-	startDate := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, loc).AddDate(0, 0, -days)
+	var startDate, endDate time.Time
+
+	if month > 0 && year > 0 {
+		startDate = time.Date(year, time.Month(month), 1, 0, 0, 0, 0, loc)
+		endDate = startDate.AddDate(0, 1, 0)
+	} else {
+		now := time.Now().In(loc)
+		startDate = time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, loc).AddDate(0, 0, -6)
+		endDate = now.Add(24 * time.Hour)
+	}
 
 	err := r.db.Model(&models.Transaction{}).
 		Select("DATE(date AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Jakarta') as date, type, sum(amount) as total").
-		Where("user_id = ? AND date >= ?", userID, startDate).
+		Where("user_id = ? AND date >= ? AND date < ?", userID, startDate, endDate).
 		Group("1, type").
 		Order("1 asc").
 		Scan(&results).Error
@@ -91,7 +106,6 @@ func (r *TransactionRepository) GetTimeSeriesData(userID uint, days int) ([]map[
 		return nil, err
 	}
 
-	// Group by date for frontend ease of use
 	timeSeriesMap := make(map[string]map[string]interface{})
 	for _, res := range results {
 		dateStr := res.Date.Format("2006-01-02")
@@ -109,10 +123,19 @@ func (r *TransactionRepository) GetTimeSeriesData(userID uint, days int) ([]map[
 		}
 	}
 
-	// Convert map back to sorted slice
 	var timeSeries []map[string]interface{}
-	for i := days; i >= 0; i-- {
-		d := now.AddDate(0, 0, -i).Format("2006-01-02")
+	curr := startDate
+	for curr.Before(endDate) {
+		// If filtering by current month, stop at today
+		if month == int(time.Now().Month()) && year == time.Now().Year() && curr.After(time.Now()) {
+			break
+		}
+		// If default 7 days, stop at 7
+		if month <= 0 && curr.After(time.Now()) {
+			break
+		}
+
+		d := curr.Format("2006-01-02")
 		if val, ok := timeSeriesMap[d]; ok {
 			timeSeries = append(timeSeries, val)
 		} else {
@@ -122,7 +145,45 @@ func (r *TransactionRepository) GetTimeSeriesData(userID uint, days int) ([]map[
 				"expense": 0.0,
 			})
 		}
+		curr = curr.AddDate(0, 0, 1)
 	}
 
 	return timeSeries, nil
+}
+
+func (r *TransactionRepository) GetCategoryBreakdown(userID uint, month int, year int) ([]map[string]interface{}, error) {
+	var results []struct {
+		CategoryName string  `json:"category_name"`
+		Total        float64 `json:"total"`
+	}
+
+	query := r.db.Model(&models.Transaction{}).
+		Select("categories.name as category_name, sum(amount) as total").
+		Joins("left join categories on categories.id = transactions.category_id").
+		Where("transactions.user_id = ? AND transactions.type = 'expense'", userID)
+
+	if month > 0 && year > 0 {
+		startDate := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
+		endDate := startDate.AddDate(0, 1, 0)
+		query = query.Where("transactions.date >= ? AND transactions.date < ?", startDate, endDate)
+	}
+
+	err := query.Group("categories.name").Order("total desc").Scan(&results).Error
+	if err != nil {
+		return nil, err
+	}
+
+	var breakdown []map[string]interface{}
+	for _, res := range results {
+		name := res.CategoryName
+		if name == "" {
+			name = "Uncategorized"
+		}
+		breakdown = append(breakdown, map[string]interface{}{
+			"name":  name,
+			"value": res.Total,
+		})
+	}
+
+	return breakdown, nil
 }

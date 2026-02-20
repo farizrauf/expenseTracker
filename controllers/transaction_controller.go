@@ -89,7 +89,10 @@ func (ctrl *TransactionController) GetAll(c *gin.Context) {
 
 func (ctrl *TransactionController) GetDashboard(c *gin.Context) {
 	userID := c.MustGet("user_id").(uint)
-	data, err := ctrl.service.GetDashboard(userID)
+	month, _ := strconv.Atoi(c.Query("month"))
+	year, _ := strconv.Atoi(c.Query("year"))
+
+	data, err := ctrl.service.GetDashboard(userID, month, year)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch dashboard data"})
 		return
