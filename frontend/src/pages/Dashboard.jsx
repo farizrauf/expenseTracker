@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { useTheme } from '../hooks/useTheme';
 import { 
   TrendingUp, TrendingDown, Wallet, Plus, 
   ArrowUpRight, ArrowDownLeft, Clock 
@@ -12,6 +13,7 @@ import {
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { theme } = useTheme();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
 
