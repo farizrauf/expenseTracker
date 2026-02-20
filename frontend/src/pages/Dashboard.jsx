@@ -56,8 +56,8 @@ const Dashboard = () => {
     <div className="space-y-8 animate-in fade-in duration-500">
       <header className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold">Dashboard</h1>
-          <p className="text-gray-500">Welcome back, track your expenses here.</p>
+          <h1 className="text-2xl font-bold dark:text-white transition-colors">Dashboard</h1>
+          <p className="text-gray-500 dark:text-gray-400">Welcome back, track your expenses here.</p>
         </div>
         <button 
           onClick={() => navigate('/transactions', { state: { openModal: true } })}
@@ -70,44 +70,44 @@ const Dashboard = () => {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 card-hover">
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 card-hover transition-colors">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-blue-50 text-blue-600 rounded-2xl">
+            <div className="p-3 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl">
               <Wallet size={24} />
             </div>
-            <span className="text-xs font-semibold text-gray-400">Total Balance</span>
+            <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Total Balance</span>
           </div>
-          <h2 className="text-2xl font-bold">{formatCurrency(data?.current_balance)}</h2>
+          <h2 className="text-2xl font-bold dark:text-white transition-colors">{formatCurrency(data?.current_balance)}</h2>
           <p className="text-sm text-gray-400 mt-1">Available spending</p>
         </div>
 
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 card-hover">
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 card-hover transition-colors">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-emerald-50 text-emerald-600 rounded-2xl">
+            <div className="p-3 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400 rounded-2xl">
               <TrendingUp size={24} />
             </div>
-            <span className="text-xs font-semibold text-gray-400">Total Income</span>
+            <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Total Income</span>
           </div>
-          <h2 className="text-2xl font-bold text-emerald-600">{formatCurrency(data?.total_income)}</h2>
+          <h2 className="text-2xl font-bold text-emerald-600 dark:text-emerald-400 transition-colors uppercase tracking-wider">{formatCurrency(data?.total_income)}</h2>
           <p className="text-sm text-emerald-500 mt-1 font-medium">+12% from last month</p>
         </div>
 
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100 card-hover">
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 card-hover transition-colors">
           <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-rose-50 text-rose-600 rounded-2xl">
+            <div className="p-3 bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400 rounded-2xl">
               <TrendingDown size={24} />
             </div>
-            <span className="text-xs font-semibold text-gray-400">Total Expenses</span>
+            <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">Total Expenses</span>
           </div>
-          <h2 className="text-2xl font-bold text-rose-600">{formatCurrency(data?.total_expense)}</h2>
+          <h2 className="text-2xl font-bold text-rose-600 dark:text-rose-400 transition-colors">{formatCurrency(data?.total_expense)}</h2>
           <p className="text-sm text-rose-500 mt-1 font-medium">+5.4% from last month</p>
         </div>
       </div>
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
-          <h3 className="text-lg font-bold mb-6">Income vs Expenses</h3>
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 transition-colors">
+          <h3 className="text-lg font-bold mb-6 dark:text-white">Income vs Expenses</h3>
           <div className="h-72 w-full">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData}>
@@ -121,7 +121,7 @@ const Dashboard = () => {
                     <stop offset="95%" stopColor="#f43f5e" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f3f4f6" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={theme === 'dark' ? '#334155' : '#f3f4f6'} />
                 <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 12}} />
                 <YAxis axisLine={false} tickLine={false} tick={{fill: '#9ca3af', fontSize: 12}} />
                 <Tooltip 
@@ -134,26 +134,31 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-3xl shadow-sm border border-gray-100">
+        <div className="bg-white dark:bg-slate-800 p-6 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700 transition-colors">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-bold">Recent Transactions</h3>
-            <button className="text-primary-600 text-sm font-semibold hover:underline">See All</button>
+            <h3 className="text-lg font-bold dark:text-white">Recent Transactions</h3>
+            <button 
+              onClick={() => navigate('/transactions')}
+              className="text-primary-600 dark:text-primary-400 text-sm font-semibold hover:underline"
+            >
+              See All
+            </button>
           </div>
           <div className="space-y-4">
             {data?.last_transactions?.length > 0 ? data.last_transactions.map((t) => (
-              <div key={t.id} className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-2xl transition-all">
+              <div key={t.id} className="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-slate-700/50 rounded-2xl transition-all">
                 <div className="flex items-center space-x-4">
-                  <div className={`p-3 rounded-xl ${t.type === 'income' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+                  <div className={`p-3 rounded-xl ${t.type === 'income' ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400' : 'bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400'}`}>
                     {t.type === 'income' ? <ArrowDownLeft size={20} /> : <ArrowUpRight size={20} />}
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">{t.description || t.category?.name}</p>
-                    <p className="text-xs text-gray-400 font-medium lowercase italic">
+                    <p className="font-semibold text-gray-900 dark:text-white">{t.description || t.category?.name}</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 font-medium lowercase italic">
                       {new Date(t.date).toLocaleDateString()} • {t.category?.name}
                     </p>
                   </div>
                 </div>
-                <p className={`font-bold ${t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                <p className={`font-bold ${t.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
                   {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount)}
                 </p>
               </div>

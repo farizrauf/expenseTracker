@@ -109,8 +109,8 @@ const Transactions = () => {
     <div className="space-y-6">
       <header className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Transactions</h1>
-          <p className="text-gray-500">View and manage all your records</p>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white transition-colors">Transactions</h1>
+          <p className="text-gray-500 dark:text-gray-400">View and manage all your records</p>
         </div>
         <button 
           onClick={() => {
@@ -125,31 +125,31 @@ const Transactions = () => {
       </header>
 
       {/* Filter Bar */}
-      <div className="bg-white p-4 rounded-3xl border border-gray-100 shadow-sm flex flex-col md:flex-row gap-4">
+      <div className="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm flex flex-col md:flex-row gap-4 transition-colors">
         <div className="relative flex-1">
-          <Search className="absolute left-4 top-3 text-gray-400" size={18} />
+          <Search className="absolute left-4 top-3 text-gray-400 dark:text-gray-500" size={18} />
           <input 
             type="text" 
             placeholder="Search transactions..." 
-            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 rounded-xl border-none focus:ring-2 focus:ring-primary-500 outline-none"
+            className="w-full pl-10 pr-4 py-2.5 bg-gray-50 dark:bg-slate-700/50 rounded-xl border-none focus:ring-2 focus:ring-primary-500 outline-none dark:text-white dark:placeholder:text-gray-500 transition-all"
           />
         </div>
         <div className="flex gap-2">
-          <select className="bg-gray-50 px-4 py-2.5 rounded-xl border-none focus:ring-2 focus:ring-primary-500 outline-none text-sm font-medium">
+          <select className="bg-gray-50 dark:bg-slate-700/50 px-4 py-2.5 rounded-xl border-none focus:ring-2 focus:ring-primary-500 outline-none text-sm font-medium dark:text-white transition-all">
             <option>All Categories</option>
             {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
-          <button className="bg-gray-50 p-2.5 rounded-xl text-gray-500 hover:bg-gray-100 transition-all">
+          <button className="bg-gray-50 dark:bg-slate-700/50 p-2.5 rounded-xl text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-slate-600 transition-all">
             <Filter size={20} />
           </button>
         </div>
       </div>
 
       {/* Table/List */}
-      <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-3xl border border-gray-100 dark:border-slate-700 shadow-sm overflow-hidden transition-colors">
         <div className="overflow-x-auto">
           <table className="w-full text-left">
-            <thead className="bg-gray-50 text-gray-500 text-xs font-bold uppercase tracking-wider">
+            <thead className="bg-gray-50 dark:bg-slate-700/30 text-gray-500 dark:text-gray-400 text-xs font-bold uppercase tracking-wider">
               <tr>
                 <th className="px-6 py-4">Transaction</th>
                 <th className="px-6 py-4">Category</th>
@@ -160,24 +160,24 @@ const Transactions = () => {
             </thead>
             <tbody className="divide-y divide-gray-50 text-sm">
               {transactions.map((t) => (
-                <tr key={t.id} className="hover:bg-gray-50 transition-colors">
+                <tr key={t.id} className="hover:bg-gray-50 dark:hover:bg-slate-700/50 transition-colors border-b border-gray-50 dark:border-slate-700/50">
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-3">
-                      <div className={`p-2 rounded-lg ${t.type === 'income' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+                      <div className={`p-2 rounded-lg ${t.type === 'income' ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400' : 'bg-rose-50 dark:bg-rose-900/20 text-rose-600 dark:text-rose-400'}`}>
                         {t.type === 'income' ? <ArrowDownLeft size={16} /> : <ArrowUpRight size={16} />}
                       </div>
-                      <span className="font-semibold text-gray-900">{t.description || 'No description'}</span>
+                      <span className="font-semibold text-gray-900 dark:text-white">{t.description || 'No description'}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className="px-3 py-1 bg-gray-100 rounded-full text-xs font-medium text-gray-600">
+                    <span className="px-3 py-1 bg-gray-100 dark:bg-slate-700 rounded-full text-xs font-medium text-gray-600 dark:text-gray-300">
                       {t.category?.name}
                     </span>
                   </td>
-                  <td className="px-6 py-4 text-gray-500">
+                  <td className="px-6 py-4 text-gray-500 dark:text-gray-400">
                     {new Date(t.date).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' })}
                   </td>
-                  <td className={`px-6 py-4 font-bold ${t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                  <td className={`px-6 py-4 font-bold ${t.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
                     {t.type === 'income' ? '+' : '-'}{formatCurrency(t.amount)}
                   </td>
                   <td className="px-6 py-4 text-right">
@@ -210,22 +210,22 @@ const Transactions = () => {
 
       {/* Modal - Basic Implementation */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white w-full max-w-lg rounded-3xl p-8 shadow-2xl animate-in zoom-in duration-300">
-            <h2 className="text-xl font-bold mb-6">{editingId ? 'Edit Transaction' : 'New Transaction'}</h2>
+        <div className="fixed inset-0 bg-black/50 dark:bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-all">
+          <div className="bg-white dark:bg-slate-800 w-full max-w-lg rounded-3xl p-8 shadow-2xl animate-in zoom-in duration-300 transition-colors">
+            <h2 className="text-xl font-bold mb-6 dark:text-white uppercase tracking-wider">{editingId ? 'Edit Transaction' : 'New Transaction'}</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="flex bg-gray-100 p-1 rounded-2xl">
+              <div className="flex bg-gray-100 dark:bg-slate-700 p-1 rounded-2xl">
                 <button
                   type="button"
                   onClick={() => setFormData({...formData, type: 'expense'})}
-                  className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${formData.type === 'expense' ? 'bg-white text-rose-600 shadow-sm' : 'text-gray-500'}`}
+                  className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${formData.type === 'expense' ? 'bg-white dark:bg-slate-600 text-rose-600 dark:text-rose-400 shadow-sm' : 'text-gray-500 dark:text-gray-400'}`}
                 >
                   Expense
                 </button>
                 <button
                   type="button"
                   onClick={() => setFormData({...formData, type: 'income'})}
-                  className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${formData.type === 'income' ? 'bg-white text-emerald-600 shadow-sm' : 'text-gray-500'}`}
+                  className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${formData.type === 'income' ? 'bg-white dark:bg-slate-600 text-emerald-600 dark:text-emerald-400 shadow-sm' : 'text-gray-500 dark:text-gray-400'}`}
                 >
                   Income
                 </button>
@@ -233,45 +233,45 @@ const Transactions = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-500">Amount (IDR)</label>
+                  <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Amount (IDR)</label>
                   <input
                     type="number"
                     required
-                    className="w-full px-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-4 py-3 bg-gray-50 dark:bg-slate-700/50 border-none rounded-2xl focus:ring-2 focus:ring-primary-500 dark:text-white transition-all"
                     placeholder="0"
                     value={formData.amount}
                     onChange={(e) => setFormData({...formData, amount: e.target.value})}
                   />
                 </div>
                 <div className="space-y-1">
-                  <label className="text-xs font-bold text-gray-500">Category</label>
+                  <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Category</label>
                   <select
                     required
-                    className="w-full px-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-4 py-3 bg-gray-50 dark:bg-slate-700/50 border-none rounded-2xl focus:ring-2 focus:ring-primary-500 dark:text-white transition-all"
                     value={formData.category_id}
                     onChange={(e) => setFormData({...formData, category_id: e.target.value})}
                   >
-                    <option value="">Select</option>
-                    {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                    <option value="" className="dark:bg-slate-800">Select</option>
+                    {categories.map(c => <option key={c.id} value={c.id} className="dark:bg-slate-800">{c.name}</option>)}
                   </select>
                 </div>
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-500">Date</label>
+                <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Date</label>
                 <input
                   type="date"
                   required
-                  className="w-full px-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-slate-700/50 border-none rounded-2xl focus:ring-2 focus:ring-primary-500 dark:text-white transition-all"
                   value={formData.date}
                   onChange={(e) => setFormData({...formData, date: e.target.value})}
                 />
               </div>
 
               <div className="space-y-1">
-                <label className="text-xs font-bold text-gray-500">Description</label>
+                <label className="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">Description</label>
                 <textarea
-                  className="w-full px-4 py-3 bg-gray-50 border-none rounded-2xl focus:ring-2 focus:ring-primary-500"
+                  className="w-full px-4 py-3 bg-gray-50 dark:bg-slate-700/50 border-none rounded-2xl focus:ring-2 focus:ring-primary-500 dark:text-white transition-all"
                   placeholder="e.g. Lunch with client"
                   rows="3"
                   value={formData.description}
@@ -283,7 +283,7 @@ const Transactions = () => {
                 <button
                   type="button"
                   onClick={handleCloseModal}
-                  className="flex-1 py-3 bg-gray-100 text-gray-600 font-bold rounded-2xl hover:bg-gray-200 transition-all"
+                  className="flex-1 py-3 bg-gray-100 dark:bg-slate-700 text-gray-600 dark:text-gray-300 font-bold rounded-2xl hover:bg-gray-200 dark:hover:bg-slate-600 transition-all"
                 >
                   Cancel
                 </button>
