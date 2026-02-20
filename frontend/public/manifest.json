@@ -1,8 +1,11 @@
 {
+  "id": "com.financetracker.app",
   "name": "Finance Tracker - Modern Fintech",
   "short_name": "Finance",
   "description": "Manage your expenses and incomes with a modern, glassmorphed fintech dashboard. Built with Go and React.",
-  "start_url": "/",
+  "lang": "en-US",
+  "dir": "ltr",
+  "start_url": "./",
   "scope": "/",
   "display": "standalone",
   "orientation": "any",
