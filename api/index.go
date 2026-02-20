@@ -1,7 +1,7 @@
-package main
+package handler
 
 import (
-	"log"
+	"net/http"
 	"os"
 
 	"github.com/antigravity/finance-tracker/config"
@@ -11,10 +11,11 @@ import (
 	"github.com/antigravity/finance-tracker/services"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
-func main() {
+var app *gin.Engine
+
+func init() {
 	// Initialize DB
 	config.InitDB()
 
@@ -34,7 +35,9 @@ func main() {
 	transCtrl := controllers.NewTransactionController(transService)
 
 	// Setup Gin
-	r := gin.Default()
+	gin.SetMode(gin.ReleaseMode)
+	app = gin.New()
+	app.Use(gin.Recovery())
 
 	// Middleware
 	frontendURL := os.Getenv("FRONTEND_URL")
@@ -43,7 +46,7 @@ func main() {
 		allowedOrigins = append(allowedOrigins, frontendURL)
 	}
 
-	r.Use(cors.New(cors.Config{
+	app.Use(cors.New(cors.Config{
 		AllowOrigins:     allowedOrigins,
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
@@ -52,19 +55,9 @@ func main() {
 	}))
 
 	// Setup Routes
-	routes.SetupRoutes(r, authCtrl, catCtrl, transCtrl)
+	routes.SetupRoutes(app, authCtrl, catCtrl, transCtrl)
+}
 
-	// Start Server
-	err := godotenv.Load()
-	if err != nil {
-		log.Println("Warning: .env file not found")
-	}
-
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = "8080"
-	}
-
-	log.Printf("Server starting on port %s", port)
-	r.Run(":" + port)
+func Handler(w http.ResponseWriter, r *http.Request) {
+	app.ServeHTTP(w, r)
 }
