@@ -166,7 +166,7 @@ const Transactions = () => {
             onChange={(e) => setCategoryFilter(e.target.value)}
           >
             <option value="">{t('all_categories')}</option>
-            {(categories || []).map(c => <option key={c.id} value={c.id} className="dark:bg-slate-800">{c.name}</option>)}
+            {(categories || []).map(c => <option key={c.id} value={c.id} className="dark:bg-slate-800">{t(c.name)}</option>)}
           </select>
         </div>
       </div>
@@ -201,7 +201,7 @@ const Transactions = () => {
                   </td>
                   <td className="px-8 py-6">
                     <span className="px-4 py-1.5 bg-gray-100 dark:bg-slate-700 rounded-full text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 group-hover:bg-primary-100/50 dark:group-hover:bg-primary-900/30 transition-colors">
-                      {tr.category_name}
+                      {t(tr.category_name)}
                     </span>
                   </td>
                   <td className="px-8 py-6 text-sm font-bold text-gray-400 dark:text-gray-500">
@@ -284,7 +284,7 @@ const Transactions = () => {
                       }}
                     >
                       <option value="" className="dark:bg-slate-800">{t('select_category')}</option>
-                      {(categories || []).map(c => <option key={c.id} value={c.id} className="dark:bg-slate-800">{c.name}</option>)}
+                      {(categories || []).map(c => <option key={c.id} value={c.id} className="dark:bg-slate-800">{t(c.name)}</option>)}
                       <option value="new" className="dark:bg-slate-800 font-bold text-primary-600">{t('create_new_category')}</option>
                     </select>
                     {isNewCategory && (

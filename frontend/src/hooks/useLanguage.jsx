@@ -101,7 +101,22 @@ const translations = {
     // Months
     jan: 'January', feb: 'February', mar: 'March', apr: 'April',
     may: 'May', jun: 'June', jul: 'July', aug: 'August',
-    sep: 'September', oct: 'October', nov: 'November', dec: 'December'
+    sep: 'September', oct: 'October', nov: 'November', dec: 'December',
+
+    // Categories (Default)
+    "Salary": "Salary",
+    "Freelance": "Freelance",
+    "Investment": "Investment",
+    "Gift": "Gift",
+    "Bonus": "Bonus",
+    "Food & Beverage": "Food & Beverage",
+    "Transportation": "Transportation",
+    "Shopping": "Shopping",
+    "Rent": "Rent",
+    "Utilities": "Utilities",
+    "Entertainment": "Entertainment",
+    "Health": "Health",
+    "Education": "Education"
   },
   id: {
     // Navigation
@@ -201,7 +216,22 @@ const translations = {
     // Months
     jan: 'Januari', feb: 'Februari', mar: 'Maret', apr: 'April',
     may: 'Mei', jun: 'Juni', jul: 'Juli', aug: 'Agustus',
-    sep: 'September', oct: 'Oktober', nov: 'November', dec: 'Desember'
+    sep: 'September', oct: 'Oktober', nov: 'November', dec: 'Desember',
+
+    // Kategori (Default)
+    "Salary": "Gaji",
+    "Freelance": "Pekerjaan Lepas",
+    "Investment": "Investasi",
+    "Gift": "Hadiah",
+    "Bonus": "Bonus",
+    "Food & Beverage": "Makanan & Minuman",
+    "Transportation": "Transportasi",
+    "Shopping": "Belanja",
+    "Rent": "Sewa",
+    "Utilities": "Tagihan",
+    "Entertainment": "Hiburan",
+    "Health": "Kesehatan",
+    "Education": "Pendidikan"
   }
 };
 

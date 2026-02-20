@@ -203,12 +203,14 @@ const Dashboard = () => {
                     paddingAngle={8}
                     dataKey="total"
                     nameKey="category_name"
+                    label={({ category_name }) => t(category_name)}
                   >
                     {categoryBreakdown.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} stroke="none" />
                     ))}
                   </Pie>
                   <Tooltip 
+                    formatter={(value, name) => [new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(value), t(name)]}
                     contentStyle={{ 
                       backgroundColor: theme === 'dark' ? '#1e293b' : '#ffffff', 
                       borderRadius: '1rem', 
@@ -250,7 +252,7 @@ const Dashboard = () => {
                     <p className="font-bold text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors">
                       {transaction.description || t('no_description')}
                     </p>
-                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{transaction.category_name}</p>
+                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">{t(transaction.category_name)}</p>
                   </div>
                 </div>
                 <div className="text-right">

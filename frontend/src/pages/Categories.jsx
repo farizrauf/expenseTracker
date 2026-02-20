@@ -121,7 +121,7 @@ const Categories = () => {
                       <Tag size={20} />
                     </div>
                     <div>
-                      <p className="font-bold text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors uppercase tracking-wide">{c.name}</p>
+                      <p className="font-bold text-gray-900 dark:text-white group-hover:text-primary-600 transition-colors uppercase tracking-wide">{t(c.name)}</p>
                       <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
                         {t('created_at')} • {new Date(c.CreatedAt).toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </p>
