@@ -206,10 +206,18 @@ const translations = {
 };
 
 export const LanguageProvider = ({ children }) => {
-  const [language, setLanguage] = useState(localStorage.getItem('language') || 'id');
+  const [language, setLanguage] = useState(() => {
+    try {
+      return localStorage.getItem('language') || 'id';
+    } catch (e) {
+      return 'id';
+    }
+  });
 
   useEffect(() => {
-    localStorage.setItem('language', language);
+    try {
+      localStorage.setItem('language', language);
+    } catch (e) {}
   }, [language]);
 
   const toggleLanguage = () => {
@@ -217,8 +225,13 @@ export const LanguageProvider = ({ children }) => {
   };
 
   const t = (key) => {
-    const lang = translations[language] || translations['en'] || {};
-    return lang[key] || key;
+    try {
+      const safeTranslations = translations || {};
+      const lang = safeTranslations[language] || safeTranslations['en'] || safeTranslations['id'] || {};
+      return lang[key] || key;
+    } catch (e) {
+      return key;
+    }
   };
 
   return (

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
-  TrendingUp, TrendingDown, Wallet, Plus, 
+  TrendingUp, TrendingDown, Wallet, 
   Calendar, Loader2, PieChart as PieChartIcon
 } from 'lucide-react';
 import {
@@ -18,7 +18,7 @@ const CHART_COLORS = ['#3b82f6', '#10b981', '#f43f5e', '#f59e0b', '#8b5cf6', '#0
 const Dashboard = () => {
   const navigate = useNavigate();
   const { theme } = useTheme();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   
   const [filter, setFilter] = useState({
     month: new Date().getMonth() + 1,
@@ -38,20 +38,25 @@ const Dashboard = () => {
   const years = Array.from({ length: 5 }, (_, i) => new Date().getFullYear() - i);
 
   useEffect(() => {
-    fetchDashboardData();
-  }, [filter]);
+    let isMounted = true;
+    const fetchDashboardData = async () => {
+      setLoading(true);
+      try {
+        const res = await api.get('/dashboard', { params: filter });
+        if (isMounted) {
+          setData(res.data || {});
+        }
+      } catch (err) {
+        console.error('Failed to fetch dashboard data', err);
+        if (isMounted) setData({});
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
 
-  const fetchDashboardData = async () => {
-    setLoading(true);
-    try {
-      const res = await api.get('/dashboard', { params: filter });
-      setData(res.data);
-    } catch (err) {
-      console.error('Failed to fetch dashboard data', err);
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchDashboardData();
+    return () => { isMounted = false; };
+  }, [filter]);
 
   if (loading && !data) {
     return (
@@ -60,6 +65,12 @@ const Dashboard = () => {
       </div>
     );
   }
+
+  // Safe data access
+  const summary = data?.summary || { income: 0, expense: 0, balance: 0 };
+  const recentTransactions = Array.isArray(data?.recent_transactions) ? data.recent_transactions : [];
+  const timeSeries = Array.isArray(data?.time_series) ? data.time_series : [];
+  const categoryBreakdown = Array.isArray(data?.category_breakdown) ? data.category_breakdown : [];
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -102,7 +113,7 @@ const Dashboard = () => {
           <div className="relative z-10">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary-100">{t('cash_flow')}</span>
             <h2 className="text-4xl font-black mt-2 mb-2 tracking-tight">
-              {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(data?.summary?.balance || 0)}
+              {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(summary.balance || 0)}
             </h2>
             <p className="text-sm font-medium text-primary-100/80">{t('monthly_net_change')}</p>
           </div>
@@ -117,7 +128,7 @@ const Dashboard = () => {
           </div>
           <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{t('total_income')}</span>
           <h2 className="text-2xl font-bold mt-1 text-gray-900 dark:text-white">
-            {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(data?.summary?.income || 0)}
+            {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(summary.income || 0)}
           </h2>
         </div>
 
@@ -130,7 +141,7 @@ const Dashboard = () => {
           </div>
           <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{t('total_expense')}</span>
           <h2 className="text-2xl font-bold mt-1 text-gray-900 dark:text-white">
-            {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(data?.summary?.expense || 0)}
+            {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(summary.expense || 0)}
           </h2>
         </div>
       </div>
@@ -140,7 +151,7 @@ const Dashboard = () => {
           <h3 className="text-lg font-bold mb-6 dark:text-white uppercase tracking-wider">{t('monthly_trend')}</h3>
           <div className="h-[300px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={data?.time_series || []}>
+              <AreaChart data={timeSeries}>
                 <defs>
                   <linearGradient id="colorIncome" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
@@ -180,11 +191,11 @@ const Dashboard = () => {
         <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-8 border border-white dark:border-slate-700 shadow-xl shadow-gray-100 dark:shadow-none transition-colors">
           <h3 className="text-lg font-bold mb-6 dark:text-white uppercase tracking-wider">{t('expense_distribution')}</h3>
           <div className="h-[250px]">
-            {data?.category_breakdown?.length > 0 ? (
+            {categoryBreakdown.length > 0 ? (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
-                    data={data.category_breakdown}
+                    data={categoryBreakdown}
                     cx="50%"
                     cy="50%"
                     innerRadius={60}
@@ -193,7 +204,7 @@ const Dashboard = () => {
                     dataKey="total"
                     nameKey="category_name"
                   >
-                    {data.category_breakdown.map((entry, index) => (
+                    {categoryBreakdown.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} stroke="none" />
                     ))}
                   </Pie>
@@ -226,9 +237,9 @@ const Dashboard = () => {
         </div>
         
         <div className="space-y-4">
-          {data?.recent_transactions?.length > 0 ? (
-            data.recent_transactions.map((transaction) => (
-              <div key={transaction.id} className="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-slate-700/50 rounded-2xl transition-all group">
+          {recentTransactions.length > 0 ? (
+            recentTransactions.map((transaction) => (
+              <div key={transaction.id || Math.random()} className="flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-slate-700/50 rounded-2xl transition-all group">
                 <div className="flex items-center space-x-4">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
                     transaction.type === 'income' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
@@ -244,10 +255,10 @@ const Dashboard = () => {
                 </div>
                 <div className="text-right">
                   <p className={`font-black ${transaction.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
-                    {transaction.type === 'income' ? '+' : '-'}{new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(transaction.amount)}
+                    {transaction.type === 'income' ? '+' : '-'}{new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(transaction.amount || 0)}
                   </p>
                   <p className="text-[10px] text-gray-400 font-medium">
-                    {new Date(transaction.date).toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', { day: 'numeric', month: 'short' })}
+                    {transaction.date ? new Date(transaction.date).toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', { day: 'numeric', month: 'short' }) : '---'}
                   </p>
                 </div>
               </div>

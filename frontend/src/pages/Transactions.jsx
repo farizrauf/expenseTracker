@@ -45,8 +45,8 @@ const Transactions = () => {
         api.get('/transactions'),
         api.get('/categories')
       ]);
-      setTransactions(transRes.data);
-      setCategories(catRes.data);
+      setTransactions(Array.isArray(transRes.data) ? transRes.data : []);
+      setCategories(Array.isArray(catRes.data) ? catRes.data : []);
     } catch (err) {
       console.error('Failed to fetch data');
     } finally {
@@ -54,14 +54,14 @@ const Transactions = () => {
     }
   };
 
-  const handleEdit = (t) => {
-    setEditingId(t.id);
+  const handleEdit = (transaction) => {
+    setEditingId(transaction.id);
     setFormData({
-      amount: t.amount,
-      category_id: t.category_id,
-      type: t.type,
-      date: t.date.split('T')[0],
-      description: t.description || ''
+      amount: transaction.amount,
+      category_id: transaction.category_id,
+      type: transaction.type,
+      date: (transaction.date || '').split('T')[0],
+      description: transaction.description || ''
     });
     setIsNewCategory(false);
     setIsModalOpen(true);
@@ -71,7 +71,7 @@ const Transactions = () => {
     if (!window.confirm(t('confirm_delete_transaction'))) return;
     try {
       await api.delete(`/transactions/${id}`);
-      setTransactions(transactions.filter(t => t.id !== id));
+      setTransactions(transactions.filter(tr => tr.id !== id));
     } catch (err) {
       alert(t('fail_delete'));
     }
@@ -119,10 +119,10 @@ const Transactions = () => {
     setNewCategoryName('');
   };
 
-  const filteredTransactions = transactions.filter(t => {
-    const matchesSearch = t.description?.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         t.category_name?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = !categoryFilter || t.category_id === parseInt(categoryFilter);
+  const filteredTransactions = (transactions || []).filter(tr => {
+    const matchesSearch = (tr.description || '').toLowerCase().includes(searchTerm.toLowerCase()) || 
+                         (tr.category_name || '').toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = !categoryFilter || tr.category_id === parseInt(categoryFilter);
     return matchesSearch && matchesCategory;
   });
 
@@ -166,7 +166,7 @@ const Transactions = () => {
             onChange={(e) => setCategoryFilter(e.target.value)}
           >
             <option value="">{t('all_categories')}</option>
-            {categories.map(c => <option key={c.id} value={c.id} className="dark:bg-slate-800">{c.name}</option>)}
+            {(categories || []).map(c => <option key={c.id} value={c.id} className="dark:bg-slate-800">{c.name}</option>)}
           </select>
         </div>
       </div>
@@ -185,37 +185,37 @@ const Transactions = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50 dark:divide-slate-700">
-              {filteredTransactions.map((t) => (
-                <tr key={t.id} className="group hover:bg-primary-50/30 dark:hover:bg-primary-900/10 transition-colors">
+              {filteredTransactions.map((tr) => (
+                <tr key={tr.id} className="group hover:bg-primary-50/30 dark:hover:bg-primary-900/10 transition-colors">
                   <td className="px-8 py-6">
                     <div className="flex items-center space-x-4">
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110 ${
-                        t.type === 'income' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
+                        tr.type === 'income' ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
                       }`}>
-                        {t.type === 'income' ? <ArrowDownLeft size={20} /> : <ArrowUpRight size={20} />}
+                        {tr.type === 'income' ? <ArrowDownLeft size={20} /> : <ArrowUpRight size={20} />}
                       </div>
                       <span className="font-bold text-gray-900 dark:text-white capitalize group-hover:text-primary-600 transition-colors">
-                        {t.description || t('no_description')}
+                        {tr.description || t('no_description')}
                       </span>
                     </div>
                   </td>
                   <td className="px-8 py-6">
                     <span className="px-4 py-1.5 bg-gray-100 dark:bg-slate-700 rounded-full text-[10px] font-black uppercase tracking-widest text-gray-500 dark:text-gray-400 group-hover:bg-primary-100/50 dark:group-hover:bg-primary-900/30 transition-colors">
-                      {t.category_name}
+                      {tr.category_name}
                     </span>
                   </td>
                   <td className="px-8 py-6 text-sm font-bold text-gray-400 dark:text-gray-500">
-                    {new Date(t.date).toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', { day: 'numeric', month: 'short', year: 'numeric' })}
+                    {tr.date ? new Date(tr.date).toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : '---'}
                   </td>
                   <td className="px-8 py-6">
-                    <span className={`font-black tracking-tight ${t.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
-                      {t.type === 'income' ? '+' : '-'}{new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(t.amount)}
+                    <span className={`font-black tracking-tight ${tr.type === 'income' ? 'text-emerald-600' : 'text-rose-600'}`}>
+                      {tr.type === 'income' ? '+' : '-'}{new Intl.NumberFormat('id-ID', { maximumFractionDigits: 0 }).format(tr.amount || 0)}
                     </span>
                   </td>
                   <td className="px-8 py-6 text-right">
                     <div className="flex items-center justify-end space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button onClick={() => handleEdit(t)} className="p-2.5 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-xl transition-all"><Edit2 size={18} /></button>
-                      <button onClick={() => handleDelete(t.id)} className="p-2.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-xl transition-all"><Trash2 size={18} /></button>
+                      <button onClick={() => handleEdit(tr)} className="p-2.5 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-xl transition-all"><Edit2 size={18} /></button>
+                      <button onClick={() => handleDelete(tr.id)} className="p-2.5 text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-xl transition-all"><Trash2 size={18} /></button>
                     </div>
                   </td>
                 </tr>
@@ -284,7 +284,7 @@ const Transactions = () => {
                       }}
                     >
                       <option value="" className="dark:bg-slate-800">{t('select_category')}</option>
-                      {categories.map(c => <option key={c.id} value={c.id} className="dark:bg-slate-800">{c.name}</option>)}
+                      {(categories || []).map(c => <option key={c.id} value={c.id} className="dark:bg-slate-800">{c.name}</option>)}
                       <option value="new" className="dark:bg-slate-800 font-bold text-primary-600">{t('create_new_category')}</option>
                     </select>
                     {isNewCategory && (

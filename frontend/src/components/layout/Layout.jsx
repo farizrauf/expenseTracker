@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Receipt, PlusCircle, LogOut, Sun, Moon, Languages } from 'lucide-react';
+import { LayoutDashboard, Receipt, PlusCircle, LogOut, Sun, Moon, Globe } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useTheme } from '../../hooks/useTheme';
 import { useLanguage } from '../../hooks/useLanguage';
@@ -90,7 +90,7 @@ const Layout = () => {
               >
                 <div className="flex items-center gap-3">
                   <div className="w-8 h-8 rounded-xl bg-gray-50 dark:bg-slate-700/50 flex items-center justify-center group-hover:bg-primary-50 dark:group-hover:bg-primary-900/20 transition-colors">
-                    <Languages size={16} />
+                    <Globe size={16} />
                   </div>
                   <span className="text-xs font-bold uppercase tracking-wider">{t('language')}</span>
                 </div>
@@ -151,8 +151,8 @@ const Layout = () => {
           onClick={toggleLanguage}
           className="flex flex-col items-center space-y-1 text-gray-400 dark:text-gray-500"
         >
-          <Languages size={24} />
-          <span className="text-[10px] font-bold uppercase tracking-wider">{language.toUpperCase()}</span>
+          <Globe size={24} />
+          <span className="text-[10px] font-bold uppercase tracking-wider">{(language || 'EN').toUpperCase()}</span>
         </button>
 
         <button
