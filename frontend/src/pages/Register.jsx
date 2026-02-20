@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 import { useLanguage } from '../hooks/useLanguage';
 import { Mail, Lock, User, Loader2, ArrowRight, Eye, EyeOff } from 'lucide-react';
