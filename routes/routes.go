@@ -40,8 +40,8 @@ func SetupRoutes(
 				transactions.POST("", transCtrl.Create)
 				transactions.PUT("/:id", transCtrl.Update)
 				transactions.DELETE("/:id", transCtrl.Delete)
-				transactions.GET("/dashboard", transCtrl.GetDashboard)
 			}
+			protected.GET("/dashboard", transCtrl.GetDashboard)
 		}
 	}
 }

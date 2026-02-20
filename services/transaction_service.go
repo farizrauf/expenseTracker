@@ -61,11 +61,13 @@ func (s *TransactionService) GetDashboard(userID uint, month int, year int) (map
 	}
 
 	return map[string]interface{}{
-		"total_income":       income,
-		"total_expense":      expense,
-		"current_balance":    balance,
-		"last_transactions":  lastTransactions,
-		"time_series":        timeSeries,
-		"category_breakdown": breakdown,
+		"summary": map[string]float64{
+			"income":  income,
+			"expense": expense,
+			"balance": balance,
+		},
+		"recent_transactions": lastTransactions,
+		"time_series":         timeSeries,
+		"category_breakdown":  breakdown,
 	}, nil
 }

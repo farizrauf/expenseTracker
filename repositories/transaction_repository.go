@@ -30,6 +30,9 @@ func (r *TransactionRepository) Delete(id uint, userID uint) error {
 func (r *TransactionRepository) FindByID(id uint, userID uint) (*models.Transaction, error) {
 	var t models.Transaction
 	err := r.db.Preload("Category").Where("id = ? AND user_id = ?", id, userID).First(&t).Error
+	if err == nil {
+		t.CategoryName = t.Category.Name
+	}
 	return &t, err
 }
 
@@ -48,6 +51,11 @@ func (r *TransactionRepository) FindAll(userID uint, filter map[string]interface
 	}
 
 	err := query.Order("date desc").Find(&transactions).Error
+	if err == nil {
+		for i := range transactions {
+			transactions[i].CategoryName = transactions[i].Category.Name
+		}
+	}
 	return transactions, err
 }
 
@@ -180,8 +188,8 @@ func (r *TransactionRepository) GetCategoryBreakdown(userID uint, month int, yea
 			name = "Uncategorized"
 		}
 		breakdown = append(breakdown, map[string]interface{}{
-			"name":  name,
-			"value": res.Total,
+			"category_name": name,
+			"total":         res.Total,
 		})
 	}
 
