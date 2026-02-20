@@ -60,7 +60,7 @@ const Dashboard = () => {
           <p className="text-gray-500">Welcome back, track your expenses here.</p>
         </div>
         <button 
-          onClick={() => navigate('/transactions')}
+          onClick={() => navigate('/transactions', { state: { openModal: true } })}
           className="bg-primary-600 text-white px-4 py-2 rounded-xl flex items-center space-x-2 hover:bg-primary-700 transition-all shadow-lg shadow-primary-200"
         >
           <Plus size={20} />

@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import api from '../services/api';
 import { Plus, Search, Filter, Trash2, Edit2, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 
 const Transactions = () => {
+  const location = useLocation();
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -18,7 +20,12 @@ const Transactions = () => {
 
   useEffect(() => {
     fetchData();
-  }, []);
+    if (location.state?.openModal) {
+      setShowModal(true);
+      // Clear state after reading to prevent reopening on refresh
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   const fetchData = async () => {
     try {
@@ -62,8 +69,8 @@ const Transactions = () => {
     setEditingId(t.id);
     setFormData({
       type: t.type,
-      amount: t.amount,
-      category_id: t.category_id,
+      amount: String(t.amount), // Convert to string for form input
+      category_id: String(t.category_id), // Convert to string for select match
       description: t.description || '',
       date: new Date(t.date).toISOString().split('T')[0]
     });
