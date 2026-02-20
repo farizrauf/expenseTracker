@@ -1,0 +1,11 @@
+FROM golang:1.24-alpine
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+# Build the binary inside the container to match architecture
+RUN CGO_ENABLED=0 GOOS=linux go build -o main main.go
+RUN chmod +x main
+EXPOSE 8080
+# Wait for DB to be ready
+CMD ["sh", "-c", "sleep 5 && ./main"]
