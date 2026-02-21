@@ -88,7 +88,18 @@ const Transactions = () => {
         setCategories([...categories, catRes.data]);
       }
 
-      const payload = { ...formData, amount: parseFloat(formData.amount), category_id: parseInt(categoryId) };
+      // Ensure numeric and safe values
+      const safeAmount = parseFloat(formData.amount) || 0;
+      const safeCategoryId = parseInt(categoryId) || 0;
+      // Send date as a proper ISO string for Gin/GORM compatibility
+      const safeDate = new Date(formData.date).toISOString();
+
+      const payload = { 
+        ...formData, 
+        amount: safeAmount, 
+        category_id: safeCategoryId,
+        date: safeDate
+      };
       
       if (editingId) {
         await api.put(`/transactions/${editingId}`, payload);

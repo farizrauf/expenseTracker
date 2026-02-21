@@ -117,11 +117,6 @@ const Layout = () => {
         <div className="max-w-7xl mx-auto p-4 lg:p-10">
           <Outlet />
         </div>
-
-        {/* Desktop Footer Watermark */}
-        <div className="hidden lg:block absolute bottom-4 right-8 text-[10px] text-gray-300 dark:text-gray-600 font-bold uppercase tracking-[0.2em] pointer-events-none select-none">
-          {t('developed_by')} Fariz Rauf
-        </div>
       </main>
 
       {/* Mobile Bottom Nav */}
