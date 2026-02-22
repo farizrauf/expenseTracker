@@ -179,7 +179,19 @@ const Dashboard = () => {
                     boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.1)',
                     padding: '1rem'
                   }}
-                  itemStyle={{ fontWeight: 700, fontSize: '12px' }}
+                  itemStyle={{ 
+                    fontWeight: 700, 
+                    fontSize: '12px',
+                    color: theme === 'dark' ? '#ffffff' : '#1e293b'
+                  }}
+                  labelStyle={{
+                    color: theme === 'dark' ? '#ffffff' : '#1e293b',
+                    fontWeight: 800,
+                    marginBottom: '8px',
+                    textTransform: 'uppercase',
+                    fontSize: '10px',
+                    letterSpacing: '0.05em'
+                  }}
                 />
                 <Area type="monotone" dataKey="income" name={t('income_label')} stroke="#10b981" fillOpacity={1} fill="url(#colorIncome)" strokeWidth={3} />
                 <Area type="monotone" dataKey="expense" name={t('expense_label')} stroke="#f43f5e" fillOpacity={1} fill="url(#colorExpense)" strokeWidth={3} />
