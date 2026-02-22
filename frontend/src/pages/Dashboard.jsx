@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
   TrendingUp, TrendingDown, Wallet, 
-  Calendar, Loader2, PieChart as PieChartIcon
+  Calendar, Loader2, PieChart as PieChartIcon, Plus, PlusCircle
 } from 'lucide-react';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, 
@@ -102,6 +102,14 @@ const Dashboard = () => {
             {years.map(y => <option key={y} value={y} className="dark:bg-slate-800">{y}</option>)}
           </select>
         </div>
+
+        <button 
+          onClick={() => navigate('/transactions', { state: { openModal: true } })}
+          className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-4 rounded-[1.5rem] flex items-center justify-center space-x-2 shadow-xl shadow-primary-200 dark:shadow-none transition-all active:scale-95 group font-bold order-first md:order-last"
+        >
+          <PlusCircle size={24} className="group-hover:rotate-90 transition-transform" />
+          <span className="tracking-wide">{t('add_record')}</span>
+        </button>
       </header>
 
       {/* Main Stats Grid */}
@@ -305,6 +313,14 @@ const Dashboard = () => {
           )}
         </div>
       </div>
+      {/* Floating Shortcut Button for Mobile/Quick Access */}
+      <button 
+        onClick={() => navigate('/transactions', { state: { openModal: true } })}
+        className="fixed bottom-24 right-6 lg:bottom-10 lg:right-10 w-16 h-16 bg-primary-600 hover:bg-primary-700 text-white rounded-full flex items-center justify-center shadow-2xl shadow-primary-400 dark:shadow-none transition-all active:scale-90 z-40 group md:hidden"
+        title={t('add_record')}
+      >
+        <Plus size={32} className="group-hover:rotate-90 transition-transform" />
+      </button>
     </div>
   );
 };
