@@ -203,7 +203,15 @@ const Dashboard = () => {
                     paddingAngle={8}
                     dataKey="total"
                     nameKey="category_name"
-                    label={({ category_name }) => t(category_name)}
+                    label={({ category_name }) => (
+                      <text
+                        fill={theme === 'dark' ? '#cbd5e1' : '#64748b'}
+                        fontSize={10}
+                        fontWeight={600}
+                      >
+                        {t(category_name)}
+                      </text>
+                    )}
                   >
                     {categoryBreakdown.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={CHART_COLORS[index % CHART_COLORS.length]} stroke="none" />
@@ -216,6 +224,17 @@ const Dashboard = () => {
                       borderRadius: '1rem', 
                       border: 'none',
                       boxShadow: '0 10px 15px -3px rgb(0 0 0 / 0.1)'
+                    }}
+                    itemStyle={{
+                      color: theme === 'dark' ? '#ffffff' : '#1e293b',
+                      fontSize: '12px',
+                      fontWeight: 700
+                    }}
+                    labelStyle={{
+                      color: theme === 'dark' ? '#94a3b8' : '#64748b',
+                      fontSize: '10px',
+                      fontWeight: 600,
+                      marginBottom: '4px'
                     }}
                   />
                 </PieChart>
