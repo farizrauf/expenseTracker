@@ -203,8 +203,11 @@ const Dashboard = () => {
                     paddingAngle={8}
                     dataKey="total"
                     nameKey="category_name"
-                    label={({ category_name }) => (
+                    label={({ cx, cy, midAngle, innerRadius, outerRadius, x, y, textAnchor, category_name }) => (
                       <text
+                        x={x}
+                        y={y}
+                        textAnchor={textAnchor}
                         fill={theme === 'dark' ? '#cbd5e1' : '#64748b'}
                         fontSize={10}
                         fontWeight={600}
