@@ -181,8 +181,7 @@ const Dashboard = () => {
                   }}
                   itemStyle={{ 
                     fontWeight: 700, 
-                    fontSize: '12px',
-                    color: theme === 'dark' ? '#ffffff' : '#1e293b'
+                    fontSize: '12px'
                   }}
                   labelStyle={{
                     color: theme === 'dark' ? '#ffffff' : '#1e293b',
