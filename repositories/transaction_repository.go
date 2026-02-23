@@ -70,7 +70,8 @@ func (r *TransactionRepository) GetSummary(userID uint, month int, year int) (ma
 		Where("user_id = ?", userID)
 
 	if month > 0 && year > 0 {
-		startDate := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
+		loc, _ := time.LoadLocation("Asia/Jakarta")
+		startDate := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, loc)
 		endDate := startDate.AddDate(0, 1, 0)
 		query = query.Where("date >= ? AND date < ?", startDate, endDate)
 	}
@@ -104,7 +105,7 @@ func (r *TransactionRepository) GetTimeSeriesData(userID uint, month int, year i
 	}
 
 	err := r.db.Model(&models.Transaction{}).
-		Select("DATE(date AT TIME ZONE 'UTC' AT TIME ZONE 'Asia/Jakarta') as date, type, sum(amount) as total").
+		Select("DATE(date AT TIME ZONE 'Asia/Jakarta') as date, type, sum(amount) as total").
 		Where("user_id = ? AND date >= ? AND date < ?", userID, startDate, endDate).
 		Group("1, type").
 		Order("1 asc").
@@ -171,7 +172,8 @@ func (r *TransactionRepository) GetCategoryBreakdown(userID uint, month int, yea
 		Where("transactions.user_id = ? AND transactions.type = 'expense'", userID)
 
 	if month > 0 && year > 0 {
-		startDate := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.UTC)
+		loc, _ := time.LoadLocation("Asia/Jakarta")
+		startDate := time.Date(year, time.Month(month), 1, 0, 0, 0, 0, loc)
 		endDate := startDate.AddDate(0, 1, 0)
 		query = query.Where("transactions.date >= ? AND transactions.date < ?", startDate, endDate)
 	}

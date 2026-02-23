@@ -16,6 +16,15 @@ const Transactions = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   
+  // Utility for local date string (YYYY-MM-DD)
+  const getLocalDateString = () => {
+    const d = new Date();
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,7 +33,7 @@ const Transactions = () => {
     amount: '',
     category_id: '',
     type: 'expense',
-    date: new Date().toISOString().split('T')[0],
+    date: getLocalDateString(),
     description: ''
   });
   const [isNewCategory, setIsNewCategory] = useState(false);
@@ -123,7 +132,7 @@ const Transactions = () => {
       amount: '',
       category_id: '',
       type: 'expense',
-      date: new Date().toISOString().split('T')[0],
+      date: getLocalDateString(),
       description: ''
     });
     setIsNewCategory(false);
