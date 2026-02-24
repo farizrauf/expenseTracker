@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { 
   TrendingUp, TrendingDown, Wallet, 
-  Calendar, Loader2, PieChart as PieChartIcon, Plus, PlusCircle
+  Calendar, Loader2, PieChart as PieChartIcon, Plus, PlusCircle,
+  Eye, EyeOff
 } from 'lucide-react';
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, 
@@ -24,6 +25,15 @@ const Dashboard = () => {
     month: new Date().getMonth() + 1,
     year: new Date().getFullYear()
   });
+
+  const [showBalance, setShowBalance] = useState(() => {
+    const saved = localStorage.getItem('show_balance');
+    return saved !== null ? JSON.parse(saved) : true;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('show_balance', JSON.stringify(showBalance));
+  }, [showBalance]);
   
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -103,13 +113,23 @@ const Dashboard = () => {
           </select>
         </div>
 
-        <button 
-          onClick={() => navigate('/transactions', { state: { openModal: true } })}
-          className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-4 rounded-[1.5rem] flex items-center justify-center space-x-2 shadow-xl shadow-primary-200 dark:shadow-none transition-all active:scale-95 group font-bold order-first md:order-last"
-        >
-          <PlusCircle size={24} className="group-hover:rotate-90 transition-transform" />
-          <span className="tracking-wide">{t('add_record')}</span>
-        </button>
+        <div className="flex items-center gap-3 ml-auto md:ml-0">
+          <button
+            onClick={() => setShowBalance(!showBalance)}
+            className="p-3 bg-white dark:bg-slate-800 rounded-2xl border border-gray-100 dark:border-slate-700 text-gray-400 hover:text-primary-600 transition-colors shadow-sm"
+            title={showBalance ? t('hide_balance') : t('show_balance')}
+          >
+            {showBalance ? <Eye size={20} /> : <EyeOff size={20} />}
+          </button>
+
+          <button 
+            onClick={() => navigate('/transactions', { state: { openModal: true } })}
+            className="bg-primary-600 hover:bg-primary-700 text-white px-6 py-4 rounded-[1.5rem] flex items-center justify-center space-x-2 shadow-xl shadow-primary-200 dark:shadow-none transition-all active:scale-95 group font-bold"
+          >
+            <PlusCircle size={24} className="group-hover:rotate-90 transition-transform" />
+            <span className="tracking-wide hidden sm:inline">{t('add_record')}</span>
+          </button>
+        </div>
       </header>
 
       {/* Main Stats Grid */}
@@ -121,7 +141,10 @@ const Dashboard = () => {
           <div className="relative z-10">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-primary-100">{t('cash_flow')}</span>
             <h2 className="text-4xl font-black mt-2 mb-2 tracking-tight">
-              {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(summary.balance || 0)}
+              {showBalance 
+                ? new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(summary.balance || 0)
+                : 'Rp •••••••'
+              }
             </h2>
             <p className="text-sm font-medium text-primary-100/80">{t('monthly_net_change')}</p>
           </div>
@@ -136,7 +159,10 @@ const Dashboard = () => {
           </div>
           <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{t('total_income')}</span>
           <h2 className="text-2xl font-bold mt-1 text-gray-900 dark:text-white">
-            {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(summary.income || 0)}
+            {showBalance
+              ? new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(summary.income || 0)
+              : 'Rp •••••••'
+            }
           </h2>
         </div>
 
@@ -147,9 +173,12 @@ const Dashboard = () => {
             </div>
             <span className="text-xs font-black text-rose-600 dark:text-rose-400 uppercase tracking-widest">{t('expense_label')}</span>
           </div>
-          <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{t('total_expense')}</span>
+          <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wider">{t('total_expenses')}</span>
           <h2 className="text-2xl font-bold mt-1 text-gray-900 dark:text-white">
-            {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(summary.expense || 0)}
+            {showBalance
+              ? new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(summary.expense || 0)
+              : 'Rp •••••••'
+            }
           </h2>
         </div>
       </div>
