@@ -172,7 +172,19 @@ const Transactions = () => {
       ...rows.map(row => row.join(','))
     ].join('\n');
 
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    // Add Totals for Excel
+    const totalIncome = filteredTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + (t.amount || 0), 0);
+    const totalExpense = filteredTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + (t.amount || 0), 0);
+    const summaryRows = [
+      '',
+      `${t('total_income')},,,${totalIncome}`,
+      `${t('total_expenses')},,,${totalExpense}`,
+      `Net,, ,${totalIncome - totalExpense}`
+    ].join('\n');
+
+    const finalContent = csvContent + '\n' + summaryRows;
+
+    const blob = new Blob([finalContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
@@ -187,12 +199,15 @@ const Transactions = () => {
     window.print();
   };
 
+  const totalIncome = filteredTransactions.filter(t => t.type === 'income').reduce((sum, t) => sum + (t.amount || 0), 0);
+  const totalExpense = filteredTransactions.filter(t => t.type === 'expense').reduce((sum, t) => sum + (t.amount || 0), 0);
+
   return (
     <div className="space-y-6 lg:space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
       <style>
         {`
           @media print {
-            nav, .no-print, button, select, input, .mobile-nav {
+            nav, .no-print, button, select, input, .mobile-nav, .floating-btn {
               display: none !important;
             }
             .print-only {
@@ -201,6 +216,7 @@ const Transactions = () => {
             body {
               background: white !important;
               color: black !important;
+              padding: 20px !important;
             }
             .space-y-6, .space-y-8 {
               margin: 0 !important;
@@ -209,17 +225,49 @@ const Transactions = () => {
             table {
               width: 100% !important;
               border-collapse: collapse !important;
+              margin-top: 20px;
             }
             th, td {
-              border: 1px solid #e2e8f0 !important;
-              padding: 12px !important;
+              border: 1px solid #ddd !important;
+              padding: 10px !important;
+              text-align: left !important;
+            }
+            th {
+              background-color: #f8fafc !important;
             }
             .fixed, .absolute {
               position: static !important;
             }
+            .report-summary {
+              margin-bottom: 30px;
+              padding: 20px;
+              border: 2px solid #f1f5f9;
+              border-radius: 12px;
+            }
           }
         `}
       </style>
+
+      {/* Print-only Header */}
+      <div className="hidden print-only mb-8">
+        <h1 className="text-2xl font-black uppercase tracking-widest mb-2">{t('transactions_header')}</h1>
+        <p className="text-sm text-gray-500 mb-6">{new Date().toLocaleDateString(language === 'id' ? 'id-ID' : 'en-US', { dateStyle: 'full' })}</p>
+        
+        <div className="grid grid-cols-2 gap-4 report-summary">
+          <div>
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">{t('total_income')}</p>
+            <p className="text-xl font-bold text-emerald-600">
+              {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(totalIncome)}
+            </p>
+          </div>
+          <div>
+            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-1">{t('total_expenses')}</p>
+            <p className="text-xl font-bold text-rose-600">
+              {new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(totalExpense)}
+            </p>
+          </div>
+        </div>
+      </div>
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <h1 className="text-3xl lg:text-4xl font-black text-gray-900 dark:text-white transition-colors tracking-tight">
@@ -233,7 +281,7 @@ const Transactions = () => {
           <div className="flex items-center bg-white dark:bg-slate-800 p-1.5 rounded-2xl border border-gray-100 dark:border-slate-700 shadow-sm no-print">
             <button 
               onClick={handleExportCSV}
-              className="p-2.5 text-gray-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-xl transition-all flex items-center gap-2 text-xs font-bold uppercase tracking-wider"
+              className="p-2.5 text-emerald-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-xl transition-all flex items-center gap-2 text-xs font-bold uppercase tracking-wider"
               title="Export Excel (CSV)"
             >
               <Download size={18} />
@@ -242,7 +290,7 @@ const Transactions = () => {
             <div className="w-[1px] h-4 bg-gray-100 dark:bg-slate-700 mx-1" />
             <button 
               onClick={handleExportPDF}
-              className="p-2.5 text-gray-500 hover:text-primary-600 hover:bg-primary-50 dark:hover:bg-primary-900/20 rounded-xl transition-all flex items-center gap-2 text-xs font-bold uppercase tracking-wider"
+              className="p-2.5 text-rose-500 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-xl transition-all flex items-center gap-2 text-xs font-bold uppercase tracking-wider"
               title="Export PDF"
             >
               <Printer size={18} />
